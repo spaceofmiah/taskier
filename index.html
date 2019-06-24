@@ -17,11 +17,68 @@
 </head>
 
 <body>
-    <h1>Taskier</h1>
+    <h1 id="title">Taskier</h1>
     <main>
+        <div class="wrapper">
+            <div class="column-one">
+                <div id="task">
+                    <div class="task__item">
+                        <span class="task__item__header">
+                            <h3 class="task__item__title">Study python</h3>
+                            <p class="task__item__time">12:23pm</p>
+                        </span>
 
-        <div id='calendar'></div>
+                        <span class="action_button_group">
+                            <button class="abg__edit_btn">edit</button>
+                            <button class="abg__complete_btn">complete</button>
+                            <button class="abg__delete_btn">delete</button>
+                        </span>
+                    </div>
+                    <div class="task__item">
+                        <span class="task__item__header">
+                            <h3 class="task__item__title">Take a walk</h3>
+                            <p class="task__item__time">1:00pm</p>
+                        </span>
 
+                        <span class="action_button_group">
+                            <button class="abg__edit_btn">edit</button>
+                            <button class="abg__complete_btn">complete</button>
+                            <button class="abg__delete_btn">delete</button>
+                        </span>
+                    </div>
+                    <div class="task__item">
+                        <span class="task__item__header">
+                            <h3 class="task__item__title">Play xbox</h3>
+                            <p class="task__item__time">2:30pm</p>
+                        </span>
+
+                        <span class="action_button_group">
+                            <button class="abg__edit_btn">edit</button>
+                            <button class="abg__complete_btn">complete</button>
+                            <button class="abg__delete_btn">delete</button>
+                        </span>
+                    </div>
+                    <div class="task__item">
+                        <span class="task__item__header">
+                            <h3 class="task__item__title">Study eloquent javascript</h3>
+                            <p class="task__item__time">2:30pm</p>
+                        </span>
+
+                        <span class="action_button_group">
+                            <button class="abg__edit_btn">edit</button>
+                            <button class="abg__complete_btn">complete</button>
+                            <button class="abg__delete_btn">delete</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="add_task_btn">+</div>
+            </div>
+
+            <div class="column-two">
+                <div id='calendar'></div>
+            </div>
+        </div>
     </main>
 </body>
 
@@ -34,6 +91,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             // register plugin
             plugins: ['dayGrid'],
+            width: 200,
         });
 
         calendar.render();

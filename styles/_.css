@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 18px;
+    background: rgb(236, 236, 236);
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding-bottom: 25px;
+}
+
+#title {
+    color: rgb(0, 111, 185);
+    text-align: center;
+    font-size: 75px;
+}
+
+.wrapper {
+    padding-top: 70px;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: center;
+}
+
+.column-one {
+    flex: .7;
+}
+
+#task {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.task__item {
+    border: .4px solid rgb(0, 0, 0);
+    background: #6253ae;
+    border-radius: 10px;
+    height: 102px;
+    margin: 18px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.task__item__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task__item__header > .task__item__title {
+    color: white;
+}
+
+.task__item__header > .task__item__time {
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: rgb(177, 238, 8);
+}
+
+.action_button_group {
+    text-align: right;
+}
+
+.action_button_group > button {
+    padding: 5px 10px;
+    font-size: 14px;
+    letter-spacing: 1.2px;
+    border: .1px solid black;
+    border-radius: 5px;
+    outline: none;
+}
+
+.action_button_group > button:hover {
+    font-weight: 600;
+    transition: .5s ease;
+}
+
+.abg__edit_btn {
+    background-color: #F433AB;
+}
+
+.abg__complete_btn {
+    background-color: #83B692;
+}
+
+.abg__delete_btn {
+    background-color: #bd2828;
+}
+
+#add_task_btn {
+    position: fixed;
+    right: 50%;
+    bottom: 10px;
+    width: 80px;
+    border-radius: 50%;
+    border: 2px solid rgb(162, 143, 255);
+    background: rgb(36, 241, 104);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: bolder;
+    color: #b37b03;
+    padding-bottom: .5rem;
+}
+
+.column-two {
+    width: 500px;
+    margin: 0 auto;
+    padding-top: 3%;
+}
+
+#calendar {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+@media (max-width: 720px){
+    #task {
+        width: 100vw;
+    }
+
+    .task__item__header > .task__item__title {
+        font-size: 18px;
+    }
+
+    #add_task_btn {
+        width: 60px;
+        right: 74%;
+        bottom: 3px;
+        font-size: 35px;
+    }
+
+    .column-two {
+        padding: 3% 8px;
+    }
+}
