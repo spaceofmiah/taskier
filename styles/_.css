@@ -58,7 +58,8 @@ body {
     font-style: italic;
     font-weight: 600;
     letter-spacing: 1.5px;
-    color: rgb(177, 238, 8);
+    color: rgba(126, 237, 255, 0.65);
+    font-size: 15px;
 }
 
 .action_button_group {
@@ -72,23 +73,39 @@ body {
     border: .1px solid black;
     border-radius: 5px;
     outline: none;
+    transition: font-size .3s ease, box-shadow .2s ease;
 }
 
 .action_button_group > button:hover {
-    font-weight: 600;
-    transition: .5s ease;
+    box-shadow: 0px 0px 7px 1.1px rgba(230, 167, 231, 0.5);
+    font-size: 14.5px;
 }
 
 .abg__edit_btn {
-    background-color: #F433AB;
+    background: rgb(162, 162, 162);
+    transition: background .3s ease;
+}
+
+.abg__edit_btn:hover {
+    background: rgb(191, 183, 183);
 }
 
 .abg__complete_btn {
-    background-color: #83B692;
+    background: rgba(97, 152, 114, .9);
+    transition: background .3s ease;
+}
+
+.abg__complete_btn:hover {
+    background: rgba(97, 165, 119, 1);
 }
 
 .abg__delete_btn {
-    background-color: #bd2828;
+    background: rgba(184, 119, 119, .9);
+    transition: background .3s ease;
+}
+
+.abg__delete_btn:hover {
+    background: rgb(192, 115, 115);
 }
 
 #add_task_btn {
@@ -107,6 +124,18 @@ body {
     font-weight: bolder;
     color: #b37b03;
     padding-bottom: .5rem;
+    cursor: pointer;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+#add_task_btn:hover {
+    border: .9px solid rgb(162, 143, 255);
+    background: rgb(0, 202, 67);
+    font-size: 53px;
+    color: #ffffff;
 }
 
 .column-two {
@@ -135,6 +164,10 @@ body {
         right: 74%;
         bottom: 3px;
         font-size: 35px;
+    }
+
+    #add_task_btn:hover {
+        font-size: 38px;
     }
 
     .column-two {
