@@ -17,6 +17,20 @@ body {
   font-size: 75px;
 }
 
+.hide {
+  visibility: hidden;
+}
+
+.input {
+  width: 50%;
+  min-width: 280px;
+  padding: 16px 10px;
+  outline: none;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 0.6px solid rgba(40, 40, 40, 0.3);
+}
+
 .wrapper {
   padding-top: 70px;
   display: flex;
@@ -24,6 +38,7 @@ body {
   justify-content: center;
 }
 
+/* stying for tasks */
 #task_wrapper {
   flex: 0.7;
 }
@@ -61,6 +76,10 @@ body {
   color: rgba(126, 237, 255, 0.65);
   font-size: 15px;
 }
+
+/* 
+stylings for action buttons for creating, editing, completing and deleting a task 
+*/
 
 .action_button_group {
   text-align: right;
@@ -125,9 +144,6 @@ body {
   color: #b37b03;
   padding-bottom: 0.5rem;
   cursor: pointer;
-  -webkit-transition: all 0.4s ease;
-  -moz-transition: all 0.4s ease;
-  -o-transition: all 0.4s ease;
   transition: all 0.4s ease;
 }
 
@@ -138,7 +154,8 @@ body {
   color: #ffffff;
 }
 
-.column-two {
+/* styling for calendar view */
+#calendar_wrapper {
   width: 500px;
   margin: 0 auto;
   padding-top: 3%;
@@ -169,7 +186,65 @@ body {
     font-size: 38px;
   }
 
-  .column-two {
+  #calendar_wrapper {
     padding: 3% 8px;
+  }
+}
+
+/* Stylings for form to add a task  */
+#add_task_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(47, 47, 47, 0.9);
+}
+
+#addTaskWrapper__task_form {
+  width: 900px;
+  height: 500px;
+  border-radius: 5px;
+  padding: 18px;
+  margin: 0 auto;
+  background: #fff;
+  align-self: center;
+  text-align: center;
+}
+
+#addTaskWrapper__task_form form input[type="submit"] {
+  margin-top: 16px;
+  padding: 16px;
+  outline: none;
+  border: 0.3px solid rgba(40, 40, 40, 0.3);
+  border-radius: 8px;
+  width: 120px;
+  background: #2c8c34e8;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.4s ease;
+}
+
+#addTaskWrapper__task_form form input[type="submit"]:hover {
+  background: #2c8c34d0;
+}
+
+#addTaskWrapper__task_form h1 {
+  color: rgb(0, 111, 185);
+  padding-bottom: 16px;
+}
+
+#addTaskWrapperTaskForm__fields div {
+  margin: 12px 0;
+}
+
+@media screen and (max-width: 720px) {
+  #addTaskWrapper__task_form {
+    height: 100%;
   }
 }

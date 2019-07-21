@@ -25,6 +25,7 @@
     <h1 id="title">Taskier</h1>
     <main>
       <div class="wrapper">
+        <!-- Displaying tasks -->
         <section id="task_wrapper">
           <div id="taskWrapper__tasks">
             <div id="taskWrapperTasks__item">
@@ -44,10 +45,41 @@
           <div id="add_task_btn">+</div>
         </section>
 
-        <section class="column-two">
+        <!-- Displaying calendar -->
+        <section id="calendar_wrapper">
           <div id="calendar"></div>
         </section>
       </div>
+
+      <!-- A form for adding task -->
+      <section class="" id="add_task_wrapper">
+        <!-- <div class="shade_out"></div> -->
+        <div id="addTaskWrapper__task_form">
+          <h1>Add Task</h1>
+          <form>
+            <div id="addTaskWrapperTaskForm__fields">
+              <div>
+                <label for="id_task_title">Task title:</label>
+                <input
+                  type="text"
+                  class="input"
+                  name="task_title"
+                  id="id_task_title"
+                  placeholder="Go to the gym"
+                />
+              </div>
+
+              <div>
+                <label for="id_task_time">Task time:</label>
+                <input type="time" class="input" name="tast_time" id="id_task_time" />
+              </div>
+            </div>
+
+            
+            <input type="submit" value="Add task" />
+          </form>
+        </div>
+      </section>
     </main>
   </body>
 
