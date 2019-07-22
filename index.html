@@ -42,7 +42,7 @@
             </div>
           </div>
 
-          <div id="add_task_btn">+</div>
+          <div class="open_add_task_modal--css" id="open_add_task_modal--js">+</div>
         </section>
 
         <!-- Displaying calendar -->
@@ -52,12 +52,18 @@
       </div>
 
       <!-- A form for adding task -->
-      <section class="" id="add_task_wrapper">
-        <!-- <div class="shade_out"></div> -->
-        <div id="addTaskWrapper__task_form">
-          <h1>Add Task</h1>
+      <section id="add_task_modal">
+        <div id="addTaskModal__task_form">
+
+          <!-- HEADER -->
+          <div id="addTaskModalTaskForm__header">
+            <h1>Add Task</h1>
+            <div id="close_add_task_modal--lg">x</div>
+          </div>
+
+          <!-- FORM -->
           <form>
-            <div id="addTaskWrapperTaskForm__fields">
+            <div id="addTaskModalTaskForm__fields">
               <div>
                 <label for="id_task_title">Task title:</label>
                 <input
@@ -75,11 +81,14 @@
               </div>
             </div>
 
-            
+            <!-- SUBMIT BUTTON -->
             <input type="submit" value="Add task" />
+            <a id="close_add_task_modal--sm">cancel</a>
           </form>
         </div>
       </section>
+      <!-- a form for adding task *** -->
+
     </main>
   </body>
 
@@ -95,6 +104,8 @@
       calendar.render();
     });
   </script>
+
+<script src="/assets/scripts/ui_X_controller.js" type="text/javascript" ></script>
   <script
     src="/assets/scripts/task_controller.js"
     type="text/javascript"
