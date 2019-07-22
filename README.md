@@ -19,7 +19,7 @@ more organized, accessible and customized to your taste.
 
 3 Data persistence through local storage
 
-4 A UI structure to add a task
+4 ~~A UI structure to add a task~~
 
 5 Push notification for a task ( like a task reminder )
 
