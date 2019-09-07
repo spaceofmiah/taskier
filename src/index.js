@@ -1,9 +1,14 @@
-// ################################################################
-// ###
-// ### this file helps to incorporate JS interaction/experience to
-// ### project's UI
-// ###
-// ###############################################################
+// ### this file helps to incorporate interaction to app
+
+import Task from './Task';
+
+// test import
+let task = new Task();
+task.addTask();
+task.updateTask();
+task.markTask();
+task.removeTask();
+
 
 /**
  * simplify the process of retrieving a DOM element
