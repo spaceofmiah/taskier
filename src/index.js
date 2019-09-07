@@ -1,13 +1,22 @@
 // ### this file helps to incorporate interaction to app
 
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+
+
 import Task from './Task';
 
-// test import
-let task = new Task();
-task.addTask();
-task.updateTask();
-task.markTask();
-task.removeTask();
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new Calendar(calendarEl, {
+    plugins: [ dayGridPlugin ]
+  });
+
+  calendar.render();
+});
 
 
 /**
