@@ -3,7 +3,7 @@
 Taskier is a web app that helps to keeps track of tasks and activities, making them
 more organized, accessible and customized to your taste.
 
-![Taskier Image](/assets/images/taskier-view.png)
+![Taskier Image](/dist/taskier-view.png)
 
 ## Technologies
 
