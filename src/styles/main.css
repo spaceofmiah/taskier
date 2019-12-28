@@ -1,0 +1,284 @@
+:root {
+  --white-color: #f8f8f8;
+  --black-color: #000;
+  --purple-color: #4f0097;
+  --blue-color: #132056;
+  --green-color: #0e3f10;
+  --red-color: #3f0e0e;
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.bg-white {
+  background-color: var(--white-color);
+}
+
+.bg-black {
+  background-color: var(--black-color);
+}
+
+.bg-purple {
+  background-color: var(--purple-color);
+}
+
+.bg-green {
+  background-color: var(--green-color);
+}
+
+.bg-blue {
+  background-color: var(--blue-color);
+}
+
+.bg-red {
+  background-color: var(--red-color)
+}
+
+body {
+  font-size: 18px;
+  font-family: "Segoe UI", "Open Sans", "Helvetica Neue", sans-serif;
+  padding-bottom: 25px;
+}
+
+.show {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: all 0.5s ease-in-out !important;
+}
+
+.input {
+  width: 50%;
+  min-width: 280px;
+  padding: 16px 10px;
+  outline: none;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 0.6px solid rgba(40, 40, 40, 0.3);
+}
+
+.space-bar {
+  padding-top: 100px;
+}
+
+
+/* Navigation bar styles */
+
+nav {
+  position: fixed;
+  right: 0px;
+  left: 0px;
+  background-color: #00d3ac;
+}
+
+nav section {
+  width: 1124px;
+  margin: 0 auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav section #title {
+  font-size: 32px;
+}
+
+.navbar-sec {
+  flex: .28;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-btn__lg {
+  color: #4ac3c5;
+  padding: 6px 11px;
+  border-radius: 50%;
+  background-color: #000;
+  transition: font-size, text-shadow, .3s ease-in;
+}
+
+.navbar-sec .my-btn {
+  color: #4ac3c5;
+  padding: 6px 11px;
+  font-size: 18px;
+  padding: 10px 16px;
+  border-radius: 50%;
+  background: #6b29a8;
+  text-decoration: none;
+  background-color: #000;
+  transition: font-size, text-shadow, .3s ease-in;
+}
+
+.navbar-sec .my-btn:hover,
+.nav-btn__lg:hover {
+  font-size: 20px;
+  box-shadow: 1px 1px 2px 3px #8affdc;
+}
+
+#navbar-sidebar__js-close {
+  display: none;
+}
+
+#navbar-sidebar__js-open {
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+/* Content container style */
+
+main {
+  width: 1124px;
+  margin: 0 auto;
+}
+
+.content-area {
+  display: flex;
+  padding: 18px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content-area .task-container {
+  width: 70%;
+  transition: width .1s ease-in-out;
+}
+
+/* Task style */
+.task-card {
+  padding: 18px;
+  display: flex;
+  border-radius: 4px;
+  margin-bottom: 22px;
+  align-items: center;
+  border: 0.4px solid #000;
+  justify-content: space-between;
+}
+
+.card-content {
+  margin-bottom: 14px;
+}
+
+.card-content > .card-title {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card-content > .card-time {
+  color: #17ffcd;
+}
+
+.card-time__value {
+  color: #dfdfdf;
+  font-size: 18px;
+}
+
+.card-tags {
+  margin-top: 12px;
+}
+
+a.card-tag {
+  font-size: 14px;
+  font-weight: bolder;
+  text-decoration: none;
+  color: #d35df6;
+}
+
+
+.card-btns > button {
+  padding: 10px 12px;
+  font-size: 22px;
+  letter-spacing: 1.2px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.card-btn__edit {
+  color: #60faff;
+  background: #00767a;
+  transition: background-color 0.3s ease;
+}
+
+.card-btn__edit:hover {
+  background: #12a7ac;
+}
+
+.card-btn__complete {
+  color: greenyellow;
+  background: #006b22;
+  transition: background-color 0.3s ease;
+}
+
+.card-btn__complete:hover {
+  background: #209044;
+}
+
+.card-btn__delete {
+  color: #ff9f9f;
+  background: #a50000;
+  transition: background-color 0.3s ease;
+}
+
+.card-btn__delete:hover {
+  background: #e20c0c;
+}
+
+
+
+/**
+  Responsive styles
+*/
+
+@media screen and (max-width: 1124px ){
+  main,
+  nav section {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 820px){
+  .nav-btn__lg {
+    display: none;
+  }
+
+  .nav-toggler {
+    display: block;
+  }
+
+  .content-area .task-container {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 820px){
+  .nav-toggler{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 420px){
+  .card-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-btns > button {
+    font-size: 13px !important;
+    margin: 2px 0;
+  }
+}

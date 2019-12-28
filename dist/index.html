@@ -5,71 +5,82 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <link rel="stylesheet" href="../src/main.css" />
+  <link rel="stylesheet" href="../src/styles/fontawesome.css">
+  <link rel="stylesheet" href="../src/styles/main.css" />
   <title>Taskier</title>
 </head>
 
-<body>
-  <h1 id="title">Taskier</h1>
-  <main>
-    <div class="wrapper">
-      <!-- Displaying tasks -->
-      <section id="task_wrapper">
-        <div id="taskWrapper__tasks">
-          <div id="taskWrapperTasks__item">
-            <div id="taskWrapperTasksItem__header">
-              <h3>Study python</h3>
-              <p>12:23pm</p>
-            </div>
+<body class="bg-black">
 
-            <span class="action_button_group">
-              <button class="abg__edit_btn">edit</button>
-              <button class="abg__complete_btn">complete</button>
-              <button class="abg__delete_btn">delete</button>
-            </span>
-          </div>
+  <nav>
+    <section>
+      <h1 id="title">Taskier</h1>
+
+      <div class="navbar-sec">
+        <a href="#" class="my-btn" id="add-btn">
+          <i class="fas fa-plus"></i>
+        </a>
+        <a href="#" class="nav-btn__lg">
+          <i class="fas fa-calendar"></i>
+        </a>
+        <a href="#" class="nav-btn__lg">
+          <i class="fas fa-lightbulb"></i>
+        </a>
+        <a href="#" class="nav-btn__lg">
+          <i class="fas fa-sun"></i>
+        </a>
+
+        <a href="#" class="my-btn nav-toggler" style="font-size: 24px;">
+          <i class="fas fa-bars"></i>
+        </a >
+
+        <div id="navbar-sidebar__js-close">
         </div>
-
-        <div class="open_add_task_modal--css" id="open_add_task_modal--js">+</div>
-      </section>
-
-      <!-- Displaying calendar -->
-      <section id="calendar_wrapper">
-        <div id="calendar"></div>
-      </section>
-    </div>
-
-    <!-- A form for adding task -->
-    <section id="add_task_modal">
-      <div id="addTaskModal__task_form">
-
-        <!-- HEADER -->
-        <div id="addTaskModalTaskForm__header">
-          <h1>Add Task</h1>
-          <div id="close_add_task_modal--lg">x</div>
-        </div>
-
-        <!-- FORM -->
-        <form>
-          <div id="addTaskModalTaskForm__fields">
-            <div>
-              <label for="id_task_title">Task title:</label>
-              <input type="text" class="input" name="task_title" id="id_task_title" placeholder="Go to the gym" />
-            </div>
-
-            <div>
-              <label for="id_task_time">Task time:</label>
-              <input type="time" class="input" name="tast_time" id="id_task_time" />
-            </div>
-          </div>
-
-          <!-- SUBMIT BUTTON -->
-          <input type="submit" value="Add task" />
-          <a id="close_add_task_modal--sm">cancel</a>
-        </form>
       </div>
     </section>
-    <!-- a form for adding task *** -->
+  </nav>
+
+  <main>
+     <div class="space-bar"></div>
+
+      <div class="content-area">
+        <!-- Displaying tasks -->
+        <section class="task-container">
+
+          <div class="task-card bg-purple">
+            <div class="card-content">
+              <h3 class="card-title">Study python</h3>
+              <p class="card-time">
+                <i class="fas fa-clock"></i> 
+                <span class="card-time__value">12:23pm</span>
+              </p>
+              <p class="card-tags">
+                <a href="#" class="card-tag">#python</a>
+                <a href="#" class="card-tag">#improve</a>
+                <a href="#" class="card-tag">#cli</a>
+              </p>
+            </div>
+
+            <span class="card-btns">
+              <button class="card-btn__edit">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="card-btn__complete">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="card-btn__delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </span>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- Displaying calendar -->
+      <!-- <section id="calendar_wrapper">
+        <div id="calendar"></div>
+      </section> -->
 
   </main>
 </body>
