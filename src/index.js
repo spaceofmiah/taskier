@@ -46,6 +46,28 @@ const get = element_identifier => {
   throw new SyntaxError("no identifying symbol e.g (# --> id or . --> class)");
 };
 
+
+/**
+ * This application needs a storage to keep created tasks
+ * so they can be accessed at a later date, to handle this,
+ * browser's localStorage will be used.
+ * 
+ * This section contains code to:
+ * 
+ *  --- persist created tasks to local storage
+ *  --- retrieve persisted tasks 
+ */
+
+
+ // structure to house created tasks
+
+let STORAGE = {
+
+};
+
+
+
+
 /**
  * This section contains code to:
  * 
@@ -72,6 +94,164 @@ close_task_modal.addEventListener('click', (e)=> {
   e.preventDefault();
   hide_task_modal();
 });
+
+
+
+
+// ****** CREATION OF NEW TASK ******
+
+
+let createTaskBtn = get('#add_to_list_btn');
+
+/**
+ * Validates submitted form values. This raises an exception if 
+ * form values doesn't pass validation process. 
+ * 
+ * @param {String} title 
+ *     required form value. If empty an exception is raised
+ * @param {Date} date
+ *     required form value. If empty an exception is raised.
+ *     If value of this form field is having a previous date
+ *     an exception is also raised.
+ * @param {String} priority
+ *     required form value. If empty an exception is raised.
+ *     value of this field can either be 
+ *        -- red
+ *        -- green
+ *        -- purple
+ *     anything aside this will make an exception to be raised.
+ * @returns {Boolean, Array} 
+ *     returns true and a success message if validation is
+ *     successful, otherwise, returns false and a list of error
+ *     messages that made validation not to be succesful.
+ */
+const validate_form_values = ( title, date, priority) => {
+  let error_list = [];
+
+  if(!title){
+    error_list.push("title has no value");
+  }
+
+  if(!date) {
+    error_list.push("kindly choose a Due date");
+  }
+  else{
+    /*
+     *  If date is not filled, validate the date to 
+     *  make sure it's not a prior date.
+     */
+    let date_obj = new Date(date);
+    let present_date = new Date();
+
+    if(date_obj < present_date){
+      error_list.push(
+        "Invalid Due Date -- Due Date cannot be a previous date"
+      )
+    }
+  }
+
+  if(!priority){
+    error_list.push("no priority choosen, kindly choose a priority");
+  }
+  else {
+    if (priority !== "red" && priority !== "purple" && priority !== "green"){
+      error_list.push("priority not known, invalid priority");
+    }
+  }
+
+  if(error_list.length > 0){
+    return false, error_list;
+  }
+  return true, ["success",];
+}
+
+
+/**
+ * Creates a task and returns it -- serving as task creation handler.
+ * @param {String} tags 
+ * @param {String} due_date this string should hold a valid date format
+ * @param {String} task_title 
+ * @param {Boolean} reminder 
+ * @param {String} priority 
+ */
+const create_new_task = (tags, due_date, task_title, reminder, priority) => {
+    if(!tags){
+      tags = ['untagged',]      // assign a defualt tag if non is passed
+    } else {
+      tags = tags.split(',');     // convert string with (,) dilimeter to array
+    }
+
+    let date = new Date(due_date);  // converts date string to date obj
+
+    let task = new Task();
+    task.updateTags(tags);
+    task.updateTargetDate(date);
+    task.updateTitle(task_title);
+    task.updateReminder(reminder);
+    task.updateDateCreated(new Date());
+    task.updatePriorityLevel(priority);
+
+    return task;
+}
+
+
+
+
+/**
+ * retrieves task creation form field values, call validation method
+ * on the retrived values and if validation passes, calls task 
+ * creation handler, passing the values retrieved from form field.
+ * 
+ * After all the process are completed successfully, this function
+ * will return the created task
+ */
+const process_task_form = ( ) => {
+  let all_priority = document.getElementsByName('priority');
+  let task_title = get('#id_task_title').value;
+  let date_val = get('#id_task_date').value;
+  let reminder = get('#id_reminder').checked;
+  let tags = get('#id_task_tags').value;
+  let selected_priority = '';
+
+  all_priority.forEach( ele => {
+    let element = get(`#${ele.id}`);
+
+    if (element.checked){
+      selected_priority = element.value;
+    }
+  });
+  
+
+  let validated_, validation_message = validate_form_values(
+    task_title, date_val, selected_priority);
+  
+  
+  /**
+   * a new task will only be created if validation_response
+   * is true, otherwise, nothing is done.
+   */
+  if (validated_ === true){
+    let task = create_new_task(
+        tags, date_val, task_title, reminder, selected_priority);
+    return task;
+  }
+}
+
+
+
+createTaskBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  let task = process_task_form();
+  if (task){
+    // add it to application storage and persist in local storage
+    console.log(task);
+  }
+});
+
+
+
+
+
 
 
 /**
@@ -129,4 +309,4 @@ themeButton.addEventListener(
      change_theme();
      change_theme_icon();
    }
-)
+)    
