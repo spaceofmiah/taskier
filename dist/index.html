@@ -17,16 +17,16 @@
       <h1 id="title">Taskier</h1>
 
       <div class="navbar-sec">
-        <a href="#" class="my-btn" id="add-btn">
+        <a href="#" class="my-btn" id="task-add-btn" data-target='new-task-modal'>
           <i class="fas fa-plus"></i>
         </a>
-        <a href="#" class="nav-btn__lg">
+        <a href="#" class="nav-btn__lg" id="calendar-btn">
           <i class="fas fa-calendar"></i>
         </a>
-        <a href="#" class="nav-btn__lg">
+        <a href="#" class="nav-btn__lg" id="tip-btn">
           <i class="fas fa-lightbulb"></i>
         </a>
-        <a href="#" class="nav-btn__lg">
+        <a href="#" class="nav-btn__lg" id="theme-btn">
           <i class="fas fa-sun"></i>
         </a>
 
@@ -81,6 +81,99 @@
       <!-- <section id="calendar_wrapper">
         <div id="calendar"></div>
       </section> -->
+
+
+      <div class="" id="new-task-modal">
+        <div id="nwt_form-wrap">
+
+          <h2>Task form</h2>
+
+          <form action="#" method="GET">
+            <div class="my-form-group">
+              <span>
+                <label for="id_task_title">Task name</label>
+                <input class="my-input" type="text" name="task_title" id="id_task_title">
+              </span>
+            </div>
+
+            <div class="my-form-group">
+              <span>
+                <label>Due date</label>
+                <input class="my-input" type="date" name="task_date" id="id_task_date">
+              </span>
+            </div>
+
+            <div class="my-form-group">
+              <span>
+                <label>
+                  Tags
+                  <small>(separate tags using comma)</small>
+                </label>
+                <input class="my-input" type="text" name="task_tags" id="id_task_tags">
+              </span>
+            </div>
+
+            <div class="my-form-group">
+              <label>
+                Use color to prioritize task where 
+              </label>
+              
+              <div>
+                <span>
+                  <input type="radio" name="priority" id="purple_priority" value="blue">
+                  
+                  <label for="purple_priority">
+                    <i class="fas fa-circle" style="color: #bf00c5; font-size: 28px;"></i>
+                  </label>
+                </span>
+                
+                &emsp; &nbsp;
+
+                <span>
+                  <input type="radio" name="priority" id="green_priority" value="green">
+                  
+                  <label for="green_priority">
+                    <i class="fas fa-circle" style="color: #00ad0e; font-size: 28px;"></i>
+                  </label>
+                </span>
+                
+                &emsp; &nbsp;
+                
+                <span>
+                  <input type="radio" name="priority" id="red_priority" value="red">
+                  
+                  <label for="red_priority">
+                    <i class="fas fa-circle" style="color: #ff3333; font-size: 28px;"></i>
+                  </label>
+                </span>
+              </div>   
+              
+              
+              <div class="my-form-group">
+                <span>
+                  <label for="id_reminder">
+                    <small>remind me 30 minutes to due date</small>
+                  </label>
+                  <input type="checkbox" name="task_reminder" id="id_reminder">
+                </span>
+              </div>
+              
+            </div>  
+
+            <div class="my-form-group" style="display: flex; justify-content: space-between;align-items: center;">
+              <div>
+                <input type="submit" value="Add to list" id="add_to_list_btn">
+              </div>
+
+              <div>
+                <a href="" id="close-task-modal" style="color: #d46363">
+                  Close form
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
 
   </main>
 </body>
