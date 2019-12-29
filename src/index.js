@@ -78,6 +78,7 @@ close_task_modal.addEventListener('click', (e)=> {
  * This section contains code to:
  * 
  *  --- Change application color theme
+ *  --- Change application theme icon
  */
 
 
@@ -87,8 +88,8 @@ close_task_modal.addEventListener('click', (e)=> {
 
 
 /**
- * helps to change background color theme, which can either be
- * black or white
+ * changes background color theme -- theme color can either 
+ * be black or white.
  */
  const change_theme = () => {
    let body = document.querySelector('body');
@@ -102,9 +103,30 @@ close_task_modal.addEventListener('click', (e)=> {
    }
  }
 
+
+
+ // ***** CHANGE APPLICATION COLOR THEME ******
+
+/**
+ * changes icon on the theme button -- icon can either be a 
+ * moon icon or a sun icon.
+ */
+ const change_theme_icon = ( ) => {
+   let themeIcon = get('#theme-icon');
+   if (themeIcon.classList.contains('fa-sun')){
+     themeIcon.classList.remove('fa-sun');
+     themeIcon.classList.add('fa-moon');
+   }
+   else if (themeIcon.classList.contains('fa-moon')){
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+   }
+ }
+
 themeButton.addEventListener(
    'click', ( e) => {
      e.preventDefault();
      change_theme();
+     change_theme_icon();
    }
 )
