@@ -60,6 +60,14 @@ body {
   margin-top: 18px;
 }
 
+.learnMore {
+  color: rgba(0, 0, 0, .7); 
+  text-decoration: none; 
+  font-size: 14px; 
+  margin-left: 8px;
+  text-transform: lowercase;
+}
+
 [type="submit"] {
   outline: none;
   font-size: 18px;
