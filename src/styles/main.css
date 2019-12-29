@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+.bg-ease-change {
+  transition: background-color .3s ease-in-out;
+}
+
 .bg-white {
   background-color: var(--white-color);
 }

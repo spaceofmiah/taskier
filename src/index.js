@@ -47,8 +47,15 @@ const get = element_identifier => {
 };
 
 /**
- * Retrieve DOM action emmitters
+ * This section contains code to:
+ * 
+ *  --- Toggle on and off creation of new task form
+ *  --- Creation of new task
+ *  --- Updating of an already existing task
  */
+
+
+ // ***** TOGGLE ON AND OFF FORM FOR CREATING NEW TASK  *****
 let task_add_btn = get('#task-add-btn');
 let close_task_modal = get("#close-task-modal");
 
@@ -65,3 +72,39 @@ close_task_modal.addEventListener('click', (e)=> {
   e.preventDefault();
   hide_task_modal();
 });
+
+
+/**
+ * This section contains code to:
+ * 
+ *  --- Change application color theme
+ */
+
+
+
+ // ***** CHANGE APPLICATION COLOR THEME ******
+ let themeButton = get('#theme-btn');
+
+
+/**
+ * helps to change background color theme, which can either be
+ * black or white
+ */
+ const change_theme = () => {
+   let body = document.querySelector('body');
+   if (body.classList.contains('bg-black')){
+    body.classList.remove('bg-black');
+    body.classList.add('bg-white');
+   }
+   else if (body.classList.contains('bg-white')) {
+    body.classList.remove('bg-white');
+    body.classList.add('bg-black');
+   }
+ }
+
+themeButton.addEventListener(
+   'click', ( e) => {
+     e.preventDefault();
+     change_theme();
+   }
+)
