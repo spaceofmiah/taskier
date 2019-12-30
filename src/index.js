@@ -233,6 +233,22 @@ close_task_modal.addEventListener('click', (e)=> {
 
 
 
+// ****** RESET FORM VALUE ******
+
+
+/**
+ * Resets the value of form 
+ * @param {String} form_id 
+ *      unique identifier of the form to be reset
+ */
+const reset_form = ( form_id ) => {
+    get(`#${form_id}`).reset();
+}
+
+
+
+
+
 // ****** VALIDATE FORM VALUE TO CREATE TASK ******
 
 
@@ -379,18 +395,19 @@ const process_task_form = ( ) => {
   let validation_results = validate_form_values(
     task_title, date_val, selected_priority);
 
-  let validated = validation_results[0]
+  let form_valid = validation_results[0]
   let validation_message = validation_results[1]
   
   console.log(validation_message);
-  console.log(validated)
+  console.log(form_valid)
   /**
    * a new task will only be created if validation_response
    * is true, otherwise, nothing is done.
    */
-  if (validated === true){
+  if (form_valid === true){
     unhide_message_board("success-message-board");
     display_message(validation_message, "success-msg-note");
+    reset_form("id-task-creation-form");
     return create_new_task(
       tags, date_val, task_title, reminder, selected_priority);
   } else {
@@ -412,7 +429,7 @@ createTaskBtn.addEventListener('click', (e) => {
   if (task){
     // close task creation modal
     hide_task_modal();
-    
+
     // add it to application storage and persist in local storage
     STORAGE.unshift(task);
 
