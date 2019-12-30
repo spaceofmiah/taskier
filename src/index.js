@@ -61,9 +61,7 @@ const get = element_identifier => {
 
  // structure to house created tasks
 
-let STORAGE = {
-
-};
+let STORAGE = [];
 
 
 
@@ -116,24 +114,28 @@ let createTaskBtn = get('#add_to_list_btn');
  * @param {String} priority
  *     required form value. If empty an exception is raised.
  *     value of this field can either be 
+ * 
  *        -- red
+ * 
  *        -- green
+ * 
  *        -- purple
+ * 
  *     anything aside this will make an exception to be raised.
- * @returns {Boolean, Array} 
+ * @returns {Array} --> [ Boolean, Array ]
  *     returns true and a success message if validation is
  *     successful, otherwise, returns false and a list of error
  *     messages that made validation not to be succesful.
  */
 const validate_form_values = ( title, date, priority) => {
-  let error_list = [];
+  let message_list = [];
 
   if(!title){
-    error_list.push("title has no value");
+    message_list.push("title has no value");
   }
 
   if(!date) {
-    error_list.push("kindly choose a Due date");
+    message_list.push("kindly choose a Due date");
   }
   else{
     /*
@@ -144,25 +146,25 @@ const validate_form_values = ( title, date, priority) => {
     let present_date = new Date();
 
     if(date_obj < present_date){
-      error_list.push(
+      message_list.push(
         "Invalid Due Date -- Due Date cannot be a previous date"
       )
     }
   }
 
   if(!priority){
-    error_list.push("no priority choosen, kindly choose a priority");
+    message_list.push("no priority choosen, kindly choose a priority");
   }
   else {
     if (priority !== "red" && priority !== "purple" && priority !== "green"){
-      error_list.push("priority not known, invalid priority");
+      message_list.push("priority not known, invalid priority");
     }
   }
 
-  if(error_list.length > 0){
-    return false, error_list;
+  if(message_list.length > 0){
+    return [false, message_list];
   }
-  return true, ["success",];
+  return [true, ["success",]];
 }
 
 
@@ -181,16 +183,13 @@ const create_new_task = (tags, due_date, task_title, reminder, priority) => {
       tags = tags.split(',');     // convert string with (,) dilimeter to array
     }
 
-    let date = new Date(due_date);  // converts date string to date obj
-
-    let task = new Task();
-    task.updateTags(tags);
-    task.updateTargetDate(date);
-    task.updateTitle(task_title);
-    task.updateReminder(reminder);
-    task.updateDateCreated(new Date());
-    task.updatePriorityLevel(priority);
-
+    let targetDate = new Date(due_date);  // converts date string to date obj
+    let creationDate = new Date();
+    
+    let task = new Task(
+      tags, task_title, priority,reminder, targetDate, creationDate
+    );
+    
     return task;
 }
 
@@ -222,29 +221,38 @@ const process_task_form = ( ) => {
   });
   
 
-  let validated_, validation_message = validate_form_values(
+  /**
+   * retrieve validation results which is an array
+   * whose first element ( at index 0 ) is a boolean
+   * and the last element ( at index 1 ) is an array 
+   */
+
+  let validation_results = validate_form_values(
     task_title, date_val, selected_priority);
+
+  let validated = validation_results[0]
+  let validation_message = validation_results[1]
   
-  
+  console.log(validation_message);
+  console.log(validated)
   /**
    * a new task will only be created if validation_response
    * is true, otherwise, nothing is done.
    */
-  if (validated_ === true){
-    let task = create_new_task(
-        tags, date_val, task_title, reminder, selected_priority);
-    return task;
+  if (validated === true){
+    return create_new_task(
+      tags, date_val, task_title, reminder, selected_priority);
+  } else {
+    // display erroneous validation messages
   }
 }
-
-
 
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
   if (task){
     // add it to application storage and persist in local storage
-    console.log(task);
+    STORAGE.unshift(task);
   }
 });
 
