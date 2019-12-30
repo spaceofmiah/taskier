@@ -13,18 +13,24 @@ more organized, accessible and customized to your taste.
 
 1 Tasks should be synced with a calender day ( date, time )
 
-2 ~~Dark mode ( to change the UI to a dark mode)~~
+2 Task completion functionality
 
-3 ~~Data persistence through local storage~~
+3 Task deleting functionality
 
-4 ~~A UI structure to add a task~~
+4 Task editing functionality
 
 5 Push notification for a task ( like a task reminder )
 
 6 Add repeat feature:
+> This feature will help a task or activity to be repeated either on a weekly,  daily or monthly basis.
 
-    This feature will help a task or activity to be repeated either on a weekly
-    daily or monthly basis.
+7 ~~Dark mode ( to change the UI to a dark mode)~~
+
+8 ~~Data persistence through local storage~~
+
+9 ~~A UI structure to add a task~~
+
+
 
 #### Support
 
