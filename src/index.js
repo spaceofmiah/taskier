@@ -195,8 +195,54 @@ message_close_btn.forEach((close_btn) => {
  *  --- validate form value to create task
  *  --- Creation of new task
  *  --- Updating of an already existing task 
+ *  --- Add created task to DOM
  */
 
+
+ const add_task_to_dom = ( priority, title, tags ) => {
+   let parent = document.querySelector('.task-container');
+
+   
+   let tag_txt = "";
+   tag_txt += tags.map( tag => {
+     if (tag){
+       return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
+     }else {
+       console.log("tag is undefined");
+     }
+   });
+
+   let task = `<div class="task-card bg-${priority}">
+      <div class="card-content">
+        <h3 class="card-title">${title}</h3>
+        <p class="card-time">
+          <i class="fas fa-clock"></i>
+          <span class="card-time__value">00:00pm</span>
+        </p>
+        <p class="card-tags">
+          ${tag_txt}
+        </p>
+      </div>
+
+
+      <span class="card-btns">
+          <button class="card-btn__edit">
+            <i class="fas fa-pen"></i>
+          </button>
+
+          <button class="card-btn__complete">
+            <i class="fas fa-check"></i>
+          </button>
+
+          <button class="card-btn__delete">
+            <i class="fas fa-trash"></i>
+          </button>
+      </span>
+    </div>
+   `;
+  
+   parent.innerHTML += task;
+ }
 
 
 
@@ -429,6 +475,9 @@ createTaskBtn.addEventListener('click', (e) => {
   if (task){
     // close task creation modal
     hide_task_modal();
+
+    // adding task to DOM
+    add_task_to_dom(task.priority, task.title, task.tags);
 
     // add it to application storage and persist in local storage
     STORAGE.unshift(task);
