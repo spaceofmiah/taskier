@@ -3,8 +3,6 @@
 Taskier is a web app that helps to keeps track of tasks and activities, making them
 more organized, accessible and customized to your taste.
 
-![Taskier Image](/dist/taskier.png)
-
 ## Technologies
 
 - Vanilla JS
@@ -15,7 +13,7 @@ more organized, accessible and customized to your taste.
 
 1 Tasks should be synced with a calender day ( date, time )
 
-2 Dark mode ( to change the UI to a dark mode)
+2 ~~Dark mode ( to change the UI to a dark mode)~~
 
 3 Data persistence through local storage
 
