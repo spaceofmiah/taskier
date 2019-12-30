@@ -47,6 +47,23 @@ const get = element_identifier => {
 };
 
 
+const dom_classlist_toggler = (element_id, rm_val, add_val) => {
+  let element = get(`#${element_id}`);
+  if (element){
+    if (element.classList.contains(rm_val)){
+      element.classList.remove(rm_val);
+      element.classList.add(add_val)
+    }
+    else if (element.classList.contains(add_val)) {
+      element.classList.remove(add_val);
+      element.classList.add(rm_val);
+    }
+  }
+  return false;
+}
+
+
+
 /**
  * This application needs a storage to keep created tasks
  * so they can be accessed at a later date, to handle this,
@@ -100,6 +117,15 @@ close_task_modal.addEventListener('click', (e)=> {
 
 
 let createTaskBtn = get('#add_to_list_btn');
+
+
+const display_message = ( args, message_board_id ) => {
+  let message_board = get(`#${message_board_id}`);
+  message_board.innerHTML = '';
+  args.forEach(message => {
+    message_board.innerHTML += `${message}<br/>`
+  });
+}
 
 /**
  * Validates submitted form values. This raises an exception if 
@@ -240,12 +266,15 @@ const process_task_form = ( ) => {
    * is true, otherwise, nothing is done.
    */
   if (validated === true){
+    display_message(validation_message, "success-msg-note");
     return create_new_task(
       tags, date_val, task_title, reminder, selected_priority);
   } else {
     // display erroneous validation messages
+    display_message(validation_message, "form-msg-note");
   }
 }
+
 
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
@@ -280,15 +309,7 @@ createTaskBtn.addEventListener('click', (e) => {
  * be black or white.
  */
  const change_theme = () => {
-   let body = document.querySelector('body');
-   if (body.classList.contains('bg-black')){
-    body.classList.remove('bg-black');
-    body.classList.add('bg-white');
-   }
-   else if (body.classList.contains('bg-white')) {
-    body.classList.remove('bg-white');
-    body.classList.add('bg-black');
-   }
+  dom_classlist_toggler('body', 'bg-black', 'bg-white');
  }
 
 
@@ -300,15 +321,7 @@ createTaskBtn.addEventListener('click', (e) => {
  * moon icon or a sun icon.
  */
  const change_theme_icon = ( ) => {
-   let themeIcon = get('#theme-icon');
-   if (themeIcon.classList.contains('fa-sun')){
-     themeIcon.classList.remove('fa-sun');
-     themeIcon.classList.add('fa-moon');
-   }
-   else if (themeIcon.classList.contains('fa-moon')){
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-   }
+   dom_classlist_toggler('theme-icon', 'fa-sun', 'fa-moon');
  }
 
 themeButton.addEventListener(
