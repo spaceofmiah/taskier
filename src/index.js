@@ -40,13 +40,33 @@ const get = element_identifier => {
   }
 
   if (element_identifier.charAt(0) === ".") {
-    return document.getElementsByClassName(element_identifier.slice(1));
+    return document.querySelectorAll(element_identifier);
   }
 
   throw new SyntaxError("no identifying symbol e.g (# --> id or . --> class)");
 };
 
 
+
+
+/**
+ * Toggles class list value of a DOM element, a two way toggler.
+ * 
+ * -- firstly
+ *      It removes `rm_val` only if it is present in the class
+ *      list of the DOM element and then adds `add_val`
+ * 
+ * -- secondly
+ *      It removes `add_val` only if it is present in the class
+ *      list of the DOM element and then adds `rm_val`
+ * 
+ * @param {String} element_id 
+ *     unique id representing the DOM element --- ** REQUIRED **
+ * @param {String} rm_val 
+ *     the css class to be removed --- ** REQUIRED **
+ * @param {String} add_val 
+ *     the css class to be added --- ** REQUIRED **
+ */
 const dom_classlist_toggler = (element_id, rm_val, add_val) => {
   let element = get(`#${element_id}`);
   if (element){
@@ -64,21 +84,106 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
 
 
 
+
+
+
+
+
+
 /**
- * This application needs a storage to keep created tasks
- * so they can be accessed at a later date, to handle this,
- * browser's localStorage will be used.
+ * this section contains code that handles the core functionality of 
+ * validation messages
  * 
- * This section contains code to:
- * 
- *  --- persist created tasks to local storage
- *  --- retrieve persisted tasks 
+ *  -- unhide validation message board
+ *  -- hide validation message board
+ *  -- display validation messages
+ *  -- hide implementer
  */
 
 
- // structure to house created tasks
 
-let STORAGE = [];
+
+ /**
+  * Hides a validation message board, using the message_board_id 
+  * parameter to access the board to be hidden. 
+  * 
+  * @requirements {CSS property} hide
+  *     This function requires a css class named `hide` to be 
+  *     present in the application css file. a simple example is
+  *           
+  *         .hide {
+  *   
+  *               display: none;
+  *   
+  *         }
+  * 
+  * @param {String} message_board_id 
+  *     unique id representing the DOM element(board to be hidden)
+  * 
+  * @useage
+  *     unhide_message_board("board_id");
+  */
+const unhide_message_board = ( message_board_id ) => {
+  dom_classlist_toggler(message_board_id, 'hide', 'unhidden')
+}
+
+
+/**
+  * Unhides a validation message board, using the message_board_id 
+  * parameter to access the board to be hidden. 
+  * 
+  * @requirements {CSS property} hide
+  *     This function requires a css class named `hide` to be 
+  *     present in the application css file. a simple example is
+  *           
+  *         .hide {
+  *               
+  *             display: none;  
+  * 
+  *          }
+  * 
+  * @param {String} message_board_id 
+  *     unique id representing the DOM element(board to be hidden)
+  * 
+  * @useage
+  *     hide_message_board("board_id");
+  */
+const hide_message_board = ( message_board_id ) => {
+  dom_classlist_toggler(message_board_id, 'unhidden', 'hide');
+}
+
+
+/**
+ * Displays message to message board
+ * @param {Array} msg_list 
+ *     a list of string representing messages to be displayed
+ *    
+ * @param {String} message_board_id 
+ *     unique id representing the DOM element(board to be hidden)
+ */
+const display_message = ( msg_list, message_board_id ) => {
+  let message_board = get(`#${message_board_id}`);
+  message_board.innerHTML = '';
+  msg_list.forEach(message => {
+    message_board.innerHTML += `${message}<br/>`
+  });
+}
+
+
+/**
+ * hides message board when message close button is clicked
+ */
+let message_close_btn = get('.close-msg-btn');
+message_close_btn.forEach((close_btn) => {
+  close_btn.addEventListener('click', () => {
+    hide_message_board(close_btn.dataset.target);
+  })
+})
+
+
+
+
+
 
 
 
@@ -87,12 +192,25 @@ let STORAGE = [];
  * This section contains code to:
  * 
  *  --- Toggle on and off creation of new task form
+ *  --- validate form value to create task
  *  --- Creation of new task
- *  --- Updating of an already existing task
+ *  --- Updating of an already existing task 
  */
 
 
+
+
+
+ // ***** CREATE STORAGE TO HOLD CREATED & UPDATED TASK *****
+
+
+ let STORAGE = [];
+
+
+
  // ***** TOGGLE ON AND OFF FORM FOR CREATING NEW TASK  *****
+
+
 let task_add_btn = get('#task-add-btn');
 let close_task_modal = get("#close-task-modal");
 
@@ -113,19 +231,12 @@ close_task_modal.addEventListener('click', (e)=> {
 
 
 
-// ****** CREATION OF NEW TASK ******
 
 
-let createTaskBtn = get('#add_to_list_btn');
+// ****** VALIDATE FORM VALUE TO CREATE TASK ******
 
 
-const display_message = ( args, message_board_id ) => {
-  let message_board = get(`#${message_board_id}`);
-  message_board.innerHTML = '';
-  args.forEach(message => {
-    message_board.innerHTML += `${message}<br/>`
-  });
-}
+
 
 /**
  * Validates submitted form values. This raises an exception if 
@@ -194,6 +305,11 @@ const validate_form_values = ( title, date, priority) => {
 }
 
 
+
+
+// ****** TASK CREATION HANDLER ******
+
+
 /**
  * Creates a task and returns it -- serving as task creation handler.
  * @param {String} tags 
@@ -218,6 +334,13 @@ const create_new_task = (tags, due_date, task_title, reminder, priority) => {
     
     return task;
 }
+
+
+
+
+
+// ****** UTILIZER OF FORM VALUE VALIDATION & CREATION OF TASK ******
+
 
 
 
@@ -266,15 +389,22 @@ const process_task_form = ( ) => {
    * is true, otherwise, nothing is done.
    */
   if (validated === true){
+    unhide_message_board("success-message-board");
     display_message(validation_message, "success-msg-note");
     return create_new_task(
       tags, date_val, task_title, reminder, selected_priority);
   } else {
     // display erroneous validation messages
+    unhide_message_board("form-message-board");
     display_message(validation_message, "form-msg-note");
   }
 }
 
+
+
+/*** TASK CREATION EVENT TRIGGERER  */
+
+let createTaskBtn = get('#add_to_list_btn');
 
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
