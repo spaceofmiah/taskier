@@ -44,6 +44,16 @@ import Task from './Task';
 
 
 
+/**
+  * retrieve all data from the specified storage
+  * @param {String} storage_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  */
+ const retrieve_data = (storage_name) => {
+  return JSON.parse(localStorage.getItem(storage_name));
+}
+
 
 
 
@@ -67,21 +77,15 @@ const clear_data = (storage_name) => {
   *     whose data are to be removed
   */
 const persist_data = ( data, storage_name="myList") => {
+  let previous_data = retrieve_data(storage_name);
+  if(previous_data){
+    data.push(...previous_data)
+  }
+
   // clears all old data in storage_name
   clear_data(storage_name);
   // add new data with storage_name
   localStorage.setItem(storage_name, JSON.stringify(data));
- }
-
-
-/**
-  * retrieve all data from the specified storage
-  * @param {String} storage_name 
-  *     this is more like table name in RDBMS. it specify the table
-  *     whose data are to be removed
-  */
-const retrieve_data = (storage_name) => {
-   return JSON.parse(localStorage.getItem(storage_name));
  }
 
 
@@ -132,11 +136,15 @@ const get = element_identifier => {
  * @param {String} priority 
  * @param {String} title 
  * @param {Array} tags 
+ * @param {Boolean} reminder
+ * @param {String} target_time
+ * @param {String} target_date
  */
-const add_task_to_dom = ( priority, title, tags ) => {
+const add_task_to_dom = ( 
+  priority, title, tags, reminder, target_time, target_date ) => 
+{
   let parent = document.querySelector('.task-container');
 
-  
   let tag_txt = "";
   tag_txt += tags.map( tag => {
     if (tag){
@@ -151,7 +159,11 @@ const add_task_to_dom = ( priority, title, tags ) => {
        <h3 class="card-title">${title}</h3>
        <p class="card-time">
          <i class="fas fa-clock"></i>
-         <span class="card-time__value">00:00pm</span>
+         <span class="card-time__value">${target_date} &nbsp; by &nbsp; ${target_time}</span>
+       </p>
+       <p class="card-time">
+         <i class="fas fa-bell"></i>
+         <span class="card-time__value">${reminder ? "yes" : "no" }</span>
        </p>
        <p class="card-tags">
          ${tag_txt}
@@ -233,11 +245,17 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
  */
 
 
- {
+{
    let data = retrieve_data('tasks');
-   data.map(task => {
-     add_task_to_dom(task.priority, task.title, task.tags);
-   })
+   if (data){
+     data.map(task => {
+       let date = new Date(task.targetDate).toDateString();
+       add_task_to_dom(
+         task.priority, task.title, task.tags, 
+         task.reminder, task.targetTime, date
+        );
+     });
+   }
  }
 
 
@@ -485,12 +503,13 @@ const validate_form_values = ( title, date, priority) => {
 /**
  * Creates a task and returns it -- serving as task creation handler.
  * @param {String} tags 
- * @param {String} due_date this string should hold a valid date format
+ * @param {String} due_date should hold a valid date format
  * @param {String} task_title 
  * @param {Boolean} reminder 
  * @param {String} priority 
+ * @param {String} target_time
  */
-const create_new_task = (tags, due_date, task_title, reminder, priority) => {
+const create_new_task = (tags, due_date, task_title, reminder, priority, target_time) => {
     if(!tags){
       tags = ['untagged',]      // assign a defualt tag if non is passed
     } else {
@@ -501,7 +520,8 @@ const create_new_task = (tags, due_date, task_title, reminder, priority) => {
     let creationDate = new Date();
     
     let task = new Task(
-      tags, task_title, priority,reminder, targetDate, creationDate
+      tags, task_title, priority,reminder, 
+      targetDate, creationDate, target_time
     );
     
     return task;
@@ -528,6 +548,7 @@ const create_new_task = (tags, due_date, task_title, reminder, priority) => {
 const process_task_form = ( ) => {
   let all_priority = document.getElementsByName('priority');
   let task_title = get('#id_task_title').value;
+  let target_time = get("#id_task_time").value;
   let date_val = get('#id_task_date').value;
   let reminder = get('#id_reminder').checked;
   let tags = get('#id_task_tags').value;
@@ -565,7 +586,7 @@ const process_task_form = ( ) => {
     display_message(validation_message, "success-msg-note");
     reset_form("id-task-creation-form");
     return create_new_task(
-      tags, date_val, task_title, reminder, selected_priority);
+      tags, date_val, task_title, reminder, selected_priority, target_time);
   } else {
     // display erroneous validation messages
     unhide_message_board("form-message-board");
@@ -586,11 +607,17 @@ createTaskBtn.addEventListener('click', (e) => {
     // close task creation modal
     hide_task_modal();
 
-    // adding task to DOM
-    add_task_to_dom(task.priority, task.title, task.tags);
+     // add it to application storage and persist in local storage
+     STORAGE.unshift(task);
+     console.log(STORAGE);
 
-    // add it to application storage and persist in local storage
-    STORAGE.unshift(task);
+    // adding task to DOM
+    let date = new Date(task.targetDate).toDateString()
+    add_task_to_dom(
+      task.priority, task.title, task.tags, task.reminder,
+       task.targetTime, date
+    );
+
     persist_data(STORAGE, "tasks");
   }
 });

@@ -60,10 +60,6 @@
   background-color: #42ff4270;;
 }
 
-#success-msg-note {
-  text-align: center;
-}
-
 .close-msg-btn {
   font-size: 12;
   color: #ffffff;
@@ -85,7 +81,7 @@ body {
 }
 
 .my-input {
-  width: 50%;
+  width: 25%;
   padding: 8px;
   outline: none;
   font-size: 16px;
@@ -247,7 +243,8 @@ main {
 
 .card-time__value {
   color: #dfdfdf;
-  font-size: 18px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .card-tags {

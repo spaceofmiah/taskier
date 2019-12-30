@@ -15,8 +15,10 @@ export default class Task {
 	 * 		previous date
 	 * @param {Date} creationDate 
 	 * 		date which task was created.
+	 * @param {String} targeTime
+	 * 		time which task is meant to be completed
 	 */
-	constructor( tag, title, priority, reminder, dueDate, creationDate, ) {
+	constructor( tag, title, priority, reminder, dueDate, creationDate, targetTime) {
 		this.tags = tag;
 		this.title = title;
 		this.priority = priority;
@@ -24,6 +26,7 @@ export default class Task {
 		this.targetDate = dueDate;
 		this.is_completed = false;
 		this.timeStamp = new Date();
+		this.targetTime = targetTime;
 		this.dateCreated = creationDate;
 		console.log("created successfully");
 	}
@@ -76,6 +79,14 @@ export default class Task {
 	 */
 	setReminder(reminder){
 		this.reminder = reminder;
+	}
+
+	/**
+	 * set target time to a new target time
+	 * @param {String} targetTime 
+	 */
+	setTargetTime( targetTime){
+		this.targetTime = targetTime;
 	}
 
 	/**
