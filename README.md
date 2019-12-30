@@ -15,7 +15,7 @@ more organized, accessible and customized to your taste.
 
 2 ~~Dark mode ( to change the UI to a dark mode)~~
 
-3 Data persistence through local storage
+3 ~~Data persistence through local storage~~
 
 4 ~~A UI structure to add a task~~
 
