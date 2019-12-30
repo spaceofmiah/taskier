@@ -42,11 +42,30 @@ import Task from './Task';
  */
 
 
+
+
+
+
+
+ /**
+  * Clears all data in the specified storage
+  * @param {String} storage_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  */
 const clear_data = (storage_name) => {
   localStorage.removeItem(storage_name);
 }
 
 
+/**
+  * Persist data to the specified storage name
+  * @param {Object} data 
+  *     data to be persisted
+  * @param {String} storage_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  */
 const persist_data = ( data, storage_name="myList") => {
   // clears all old data in storage_name
   clear_data(storage_name);
@@ -55,11 +74,20 @@ const persist_data = ( data, storage_name="myList") => {
  }
 
 
+/**
+  * retrieve all data from the specified storage
+  * @param {String} storage_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  */
 const retrieve_data = (storage_name) => {
    return JSON.parse(localStorage.getItem(storage_name));
  }
 
 
+ /**
+  * Delete all available storages.
+  */
  const drop_db = ( ) => {
    localStorage.clear();
  }
