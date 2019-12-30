@@ -24,6 +24,56 @@ import Task from './Task';
 
 
 
+
+
+
+
+
+
+
+
+
+/**
+ *  This section contains code to interact with local storage object
+ *  
+ *  -- persisting data to local storage
+ *  -- retrieving data from local storage
+ *  -- clearing data on local storage
+ */
+
+
+const clear_data = (storage_name) => {
+  localStorage.removeItem(storage_name);
+}
+
+
+const persist_data = ( data, storage_name="myList") => {
+  // clears all old data in storage_name
+  clear_data(storage_name);
+  // add new data with storage_name
+  localStorage.setItem(storage_name, JSON.stringify(data));
+ }
+
+
+const retrieve_data = (storage_name) => {
+   return JSON.parse(localStorage.getItem(storage_name));
+ }
+
+
+ const drop_db = ( ) => {
+   localStorage.clear();
+ }
+
+
+
+
+
+
+
+
+
+
+
 /**
  * simplify the process of retrieving a DOM element
  *
@@ -481,7 +531,7 @@ createTaskBtn.addEventListener('click', (e) => {
 
     // add it to application storage and persist in local storage
     STORAGE.unshift(task);
-
+    persist_data(STORAGE, "tasks");
   }
 });
 
