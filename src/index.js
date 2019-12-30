@@ -86,7 +86,7 @@ const retrieve_data = (storage_name) => {
 
 
  /**
-  * Delete all available storages.
+  * Delete all available
   */
  const drop_db = ( ) => {
    localStorage.clear();
@@ -128,6 +128,64 @@ const get = element_identifier => {
 
 
 /**
+ * utility method to add task to DOM
+ * @param {String} priority 
+ * @param {String} title 
+ * @param {Array} tags 
+ */
+const add_task_to_dom = ( priority, title, tags ) => {
+  let parent = document.querySelector('.task-container');
+
+  
+  let tag_txt = "";
+  tag_txt += tags.map( tag => {
+    if (tag){
+      return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
+    }else {
+      console.log("tag is undefined");
+    }
+  });
+
+  let task = `<div class="task-card bg-${priority}">
+     <div class="card-content">
+       <h3 class="card-title">${title}</h3>
+       <p class="card-time">
+         <i class="fas fa-clock"></i>
+         <span class="card-time__value">00:00pm</span>
+       </p>
+       <p class="card-tags">
+         ${tag_txt}
+       </p>
+     </div>
+
+
+     <span class="card-btns">
+         <button class="card-btn__edit">
+           <i class="fas fa-pen"></i>
+         </button>
+
+         <button class="card-btn__complete">
+           <i class="fas fa-check"></i>
+         </button>
+
+         <button class="card-btn__delete">
+           <i class="fas fa-trash"></i>
+         </button>
+     </span>
+   </div>
+  `;
+ 
+  parent.innerHTML += task;
+}
+
+
+
+
+
+
+
+
+/**
  * Toggles class list value of a DOM element, a two way toggler.
  * 
  * -- firstly
@@ -159,6 +217,28 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
   }
   return false;
 }
+
+
+
+
+
+
+
+
+
+
+/***
+ * This section contains code to automatically populate 
+ * DOM list on application startup
+ */
+
+
+ {
+   let data = retrieve_data('tasks');
+   data.map(task => {
+     add_task_to_dom(task.priority, task.title, task.tags);
+   })
+ }
 
 
 
@@ -273,55 +353,7 @@ message_close_btn.forEach((close_btn) => {
  *  --- validate form value to create task
  *  --- Creation of new task
  *  --- Updating of an already existing task 
- *  --- Add created task to DOM
  */
-
-
- const add_task_to_dom = ( priority, title, tags ) => {
-   let parent = document.querySelector('.task-container');
-
-   
-   let tag_txt = "";
-   tag_txt += tags.map( tag => {
-     if (tag){
-       return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
-     }else {
-       console.log("tag is undefined");
-     }
-   });
-
-   let task = `<div class="task-card bg-${priority}">
-      <div class="card-content">
-        <h3 class="card-title">${title}</h3>
-        <p class="card-time">
-          <i class="fas fa-clock"></i>
-          <span class="card-time__value">00:00pm</span>
-        </p>
-        <p class="card-tags">
-          ${tag_txt}
-        </p>
-      </div>
-
-
-      <span class="card-btns">
-          <button class="card-btn__edit">
-            <i class="fas fa-pen"></i>
-          </button>
-
-          <button class="card-btn__complete">
-            <i class="fas fa-check"></i>
-          </button>
-
-          <button class="card-btn__delete">
-            <i class="fas fa-trash"></i>
-          </button>
-      </span>
-    </div>
-   `;
-  
-   parent.innerHTML += task;
- }
-
 
 
 
