@@ -10,7 +10,7 @@
   <title>Taskier</title>
 </head>
 
-<body class="bg-black bg-ease-change">
+<body class="bg-black bg-ease-change" id="body">
 
   <nav>
     <section>
@@ -42,6 +42,13 @@
 
   <main>
      <div class="space-bar"></div>
+     
+      <div class="success-msg msg hide" id="success-message-board">
+        <div class="note" id="success-msg-note"></div>
+        <a href="#" class="close-msg-btn">close</a>
+      </div>
+       
+     
 
       <div class="content-area">
         <!-- Displaying tasks -->
@@ -87,11 +94,15 @@
         <div id="nwt_form-wrap">
 
           <h2>Task form</h2>
+          <div class="error-msg msg hide" id="form-message-board">
+            <div class="note" id="form-msg-note"></div>
+            <a href="#" class="close-msg-btn">close</a>
+          </div>
 
           <form action="#" method="GET">
             <div class="my-form-group">
               <span>
-                <label for="id_task_title">Task name</label>
+                <label for="id_task_title">Task title</label>
                 <input class="my-input" type="text" name="task_title" id="id_task_title">
               </span>
             </div>
