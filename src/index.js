@@ -410,8 +410,12 @@ createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
   if (task){
+    // close task creation modal
+    hide_task_modal();
+    
     // add it to application storage and persist in local storage
     STORAGE.unshift(task);
+
   }
 });
 
