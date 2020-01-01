@@ -133,20 +133,17 @@ const get = element_identifier => {
 
 /**
  * utility method to add task to DOM
- * @param {String} priority 
- * @param {String} title 
- * @param {Array} tags 
- * @param {Boolean} reminder
- * @param {String} target_time
- * @param {String} target_date
+ * @param {Object} task
  */
-const add_task_to_dom = ( 
-  priority, title, tags, reminder, target_time, target_date ) => 
+const add_task_to_dom = ( task ) => 
 {
   let parent = document.querySelector('.task-container');
 
+  let date = new Date(task.targetDate).toDateString();
   let tag_txt = "";
-  tag_txt += tags.map( tag => {
+
+
+  tag_txt += task.tags.map( tag => {
     if (tag){
       return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
     }else {
@@ -154,16 +151,16 @@ const add_task_to_dom = (
     }
   });
 
-  let task = `<div class="task-card bg-${priority}">
+  let task_obj = `<div class="task-card bg-${task.priority}">
      <div class="card-content">
-       <h3 class="card-title">${title}</h3>
+       <h3 class="card-title">${task.title}</h3>
        <p class="card-time">
          <i class="fas fa-clock"></i>
-         <span class="card-time__value">${target_date} &nbsp; by &nbsp; ${target_time}</span>
+         <span class="card-time__value">${date} &nbsp; by &nbsp; ${task.targetTime}</span>
        </p>
        <p class="card-time">
          <i class="fas fa-bell"></i>
-         <span class="card-time__value">${reminder ? "yes" : "no" }</span>
+         <span class="card-time__value">${task.reminder ? "yes" : "no" }</span>
        </p>
        <p class="card-tags">
          ${tag_txt}
@@ -172,7 +169,7 @@ const add_task_to_dom = (
 
 
      <span class="card-btns">
-         <button class="card-btn__edit">
+         <button class="card-btn__edit" data>
            <i class="fas fa-pen"></i>
          </button>
 
@@ -187,7 +184,7 @@ const add_task_to_dom = (
    </div>
   `;
  
-  parent.innerHTML += task;
+  parent.innerHTML += task_obj;
 }
 
 
@@ -249,11 +246,7 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
    let data = retrieve_data('tasks');
    if (data){
      data.map(task => {
-       let date = new Date(task.targetDate).toDateString();
-       add_task_to_dom(
-         task.priority, task.title, task.tags, 
-         task.reminder, task.targetTime, date
-        );
+       add_task_to_dom(task);
      });
    }
  }
@@ -612,11 +605,7 @@ createTaskBtn.addEventListener('click', (e) => {
      console.log(STORAGE);
 
     // adding task to DOM
-    let date = new Date(task.targetDate).toDateString()
-    add_task_to_dom(
-      task.priority, task.title, task.tags, task.reminder,
-       task.targetTime, date
-    );
+    add_task_to_dom(task);
 
     persist_data(STORAGE, "tasks");
   }
