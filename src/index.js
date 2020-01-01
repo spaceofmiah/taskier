@@ -1,4 +1,14 @@
-// ### this file helps to incorporate interaction to app
+/**
+ * this file helps to incorporate interaction to app. This file is
+ * structured using sections and each section have a distinct responsibility
+ * it handles. Sections are numbered
+ * 
+ * Below is an index of all sections:
+ * 
+ * SECTION 1        ------    CREATE UTILITY METHOD
+ * 
+*/ 
+
 
 import { Calendar, preventDefault } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -27,19 +37,24 @@ import Task from './Task';
 
 
 
-
-
-
-
-
-
 /**
+ * 
+ *                          SECTION 1
+ * ================================================================
+ * ================================================================
+ * 
+ *                    CREATE UTILITY METHODS
+ * 
  *  This section contains code to interact with local storage object
  *  
  *  -- persisting data to local storage
  *  -- retrieving data from local storage
  *  -- clearing data on local storage
+ * 
+ * ================================================================
  */
+
+
 
 
 
@@ -70,22 +85,54 @@ const clear_data = (storage_name) => {
 
 /**
   * Persist data to the specified storage name
-  * @param {Object} data 
-  *     data to be persisted
-  * @param {String} storage_name 
+  * @param {Object} app_storage 
+  *     stores data for usage
+  * @param {Object} data
+  *     the new data to be add to storage
+  * @param {String} db_name 
   *     this is more like table name in RDBMS. it specify the table
   *     whose data are to be removed
   */
-const persist_data = ( data, storage_name="myList") => {
-  let previous_data = retrieve_data(storage_name);
+const persist_data = ( app_storage, data,  db_name="tasks") => {
+  let previous_data = retrieve_data(db_name);
+  let result;
+
   if(previous_data){
-    data.push(...previous_data)
+    // if there are existing data in storage (localStorage)
+    // include those data to the new data which is to be 
+    // persisted
+
+    /**
+      * Add it to application storage and persist in local storage
+      * 
+      * To make sure a task is not duplicated in storage, we'll have
+      * to 
+      * 
+      *   -- filter existing storage and only return those task whose
+      *      id is not equal the id of the task to be added
+      *      if a task id equals the id of the task to be added, then
+      *      that task will not be in the result set returned after
+      *      filtering
+      * 
+      *   -- add the task to be add.
+      */
+     
+    result = previous_data.filter(item => item.id != data.id);
+    result.unshift(data);
+
+    // console.log(result);
+    app_storage = [...result];
+    console.log("app-storage\n", app_storage)
+  } else {
+    app_storage.unshift(data);
+    console.log("app-storage\n", app_storage)
   }
 
-  // clears all old data in storage_name
-  clear_data(storage_name);
-  // add new data with storage_name
-  localStorage.setItem(storage_name, JSON.stringify(data));
+  // remove all existing data ( old data ) from database
+  clear_data(db_name);
+
+  // add new data to the specified storage name
+  localStorage.setItem(db_name, JSON.stringify(app_storage));
  }
 
 
@@ -95,8 +142,6 @@ const persist_data = ( data, storage_name="myList") => {
  const drop_db = ( ) => {
    localStorage.clear();
  }
-
-
 
 
 
@@ -133,25 +178,28 @@ const get = element_identifier => {
 
 /**
  * utility method to add task to DOM
- * @param {Object} task
+ * @param {Object} task an instance of Task class
  */
-const add_task_to_dom = ( task ) => 
+const update_task_dom = ( storage ) => 
 {
   let parent = document.querySelector('.task-container');
+  let task_obj;
 
-  let date = new Date(task.targetDate).toDateString();
-  let tag_txt = "";
+  storage.forEach(task => {
+    let date = new Date(task.targetDate).toDateString();
+    let tag_txt = "";
 
-
-  tag_txt += task.tags.map( tag => {
-    if (tag){
-      return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
-    }else {
-      console.log("tag is undefined");
+    if(task.tags){
+      tag_txt += task.tags.map( tag => {
+        if (tag){
+          return `<a href="#" class="card-tag">#${tag.trim()}</a>`;
+        }else {
+          console.log("tag is undefined");
+        }
+      });
     }
-  });
 
-  let task_obj = `<div class="task-card bg-${task.priority}">
+    task_obj = `<div class="task-card bg-${task.priority}">
      <div class="card-content">
        <h3 class="card-title">${task.title}</h3>
        <p class="card-time">
@@ -169,22 +217,133 @@ const add_task_to_dom = ( task ) =>
 
 
      <span class="card-btns">
-         <button class="card-btn__edit" data-task="${task.id}">
+         <button class="card-btn__edit edit-task-btn" data-task="${task.id}">
            <i class="fas fa-pen"></i>
          </button>
 
-         <button class="card-btn__complete" data-task="${task.id}">
+         <button class="card-btn__complete complete-task-btn" data-task="${task.id}">
            <i class="fas fa-check"></i>
          </button>
 
-         <button class="card-btn__delete" data-task="${task.id}">
+         <button class="card-btn__delete trash-task-btn" data-task="${task.id}">
            <i class="fas fa-trash"></i>
          </button>
      </span>
    </div>
   `;
+
+  })
+
+  
+
+  
  
   parent.innerHTML += task_obj;
+}
+
+
+
+
+
+
+
+/* PRIORITY */
+ //*    with regards this application is used to 
+ //*    define the order of task in terms of importance
+ //*    and relevance.
+
+ 
+
+/**
+ * Iterates through priority form fields (which are radio button) 
+ * and returns only the field (DOM element) that is checked.
+ */
+const dom_checked_priority_iterator = () => {
+  let all_priority = document.getElementsByName('priority');
+  let returning_element;
+
+  all_priority.forEach( ele => {
+    let element = get(`#${ele.id}`);
+    element.checked === true ? returning_element = element : "";
+  });
+
+  return returning_element;
+}
+
+
+
+const dom_priority_value_iterator = (value) => {
+  let all_priority = document.getElementsByName('priority');
+
+  let returning_element;
+  all_priority.forEach( ele => {
+    let element = get(`#${ele.id}`);
+    element.value.trim() === value.trim() ? returning_element = element : "";
+  });
+
+  return returning_element;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * inserts the values of an existing task into task form field
+ * @param {Object} task an instance of a task
+ */
+const populate_task_form = (task) => {
+  /**
+   * retrieve all form fields and set values
+   */
+
+  if(task){
+
+    // setting existing task title to form field
+    get("#id_task_title").value = task.title;
+
+    /**
+     * setting existing task date to form field
+     * accepted format is `yyyy-MM-dd`
+     */
+    let date = new Date(task.targetDate).toISOString().substring(0, 10);
+    get("#id_task_date").value = date;
+
+    // setting existing task time to form field
+    get("#id_task_time").value = task.targetTime;
+    
+    // setting existing task tags to form field
+    let tag_txt = "";
+    task.tags.forEach((tag, index) => {
+      /**
+       * it is important that tags are separated with comma (,)
+       * when populating them.
+       */
+      if(index > 0){
+        tag_txt += `,${tag}`;
+      }else {
+        tag_txt += tag;
+      }
+    });
+    get("#id_task_tags").value = tag_txt;
+
+    // setting existing task priority to form field
+    let priority_element = dom_priority_value_iterator(task.priority);
+    priority_element.checked = true;
+
+
+    // setting existing task reminder to form field
+    get("#id_reminder").checked = task.reminder;
+
+
+    // setting task id to form field dataset
+    get("#id-task-creation-form").dataset['task_id'] = task.id;
+  }
 }
 
 
@@ -227,29 +386,6 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
   return false;
 }
 
-
-
-
-
-
-
-
-
-
-/***
- * This section contains code to automatically populate 
- * DOM list on application startup
- */
-
-
-{
-   let data = retrieve_data('tasks');
-   if (data){
-     data.map(task => {
-       add_task_to_dom(task);
-     });
-   }
- }
 
 
 
@@ -375,24 +511,128 @@ message_close_btn.forEach((close_btn) => {
 
 
 
+ /***
+ * This section contains code to automatically populate 
+ * DOM list on application startup
+ */
+
+
+{
+  let data = retrieve_data('tasks');
+  if (data){
+    STORAGE = [...data];
+    if (data){
+      data.map(task => {
+        update_task_dom(STORAGE);
+      });
+    }
+  }
+}
+
+
+
+
+
+
+// ****** UPDATING A TASK ******
+
+
+
+
+
+/**
+ * Query storage and return task whose id is 
+ * supplied only when it is found.
+ * 
+ * @param {String} task_id unique id for a task
+ * 
+ * @returns {Array}  Boolean and Task or String
+ * 
+ * if task is found in storage using the given id
+ * an array of True and the found Task is returned else
+ * False and a String message is returned.
+ */
+
+const retrieve_task = ( task_id ) => {
+
+  let result;
+
+  STORAGE.forEach(task => {
+    if(task.id === task_id){
+      result = [true, task];
+    }
+  });
+
+  if (result){
+    return result;
+  }
+
+  return [false, 'no task with id found'];
+}
+
+
+
+
+
+
+
+
+
+/**
+ * EDITING A TASK
+ * 
+ *  -- retrieve the task that is to be edited
+ *  -- populate update form with the current value of the task
+ *  -- when form is submitted, the updated value is persisted.
+ */
+
+
+
+const task_update_handler = ( ) => {
+  let edit_task_btn = document.querySelectorAll(".edit-task-btn");
+
+  edit_task_btn.forEach( edit_btn  => {
+    edit_btn.addEventListener('click', (e) => {
+      e.preventDefault();
+  
+  
+      let query_response = retrieve_task(edit_btn.dataset.task);
+      if (query_response[0] === true ){
+        toggle_task_modal_visibility();
+        populate_task_form(query_response[1]);
+      }
+  
+    });
+  });
+}
+
+
+
+
+
+
+
+
+
+
  // ***** TOGGLE ON AND OFF FORM FOR CREATING NEW TASK  *****
 
 
 let task_add_btn = get('#task-add-btn');
 let close_task_modal = get("#close-task-modal");
 
-const hide_task_modal = ( element='#new-task-modal') => {
+const toggle_task_modal_visibility = ( element='#new-task-modal') => {
   get(element).classList.toggle('hide');
 }
 
 task_add_btn.addEventListener('click', (e) => {
   e.preventDefault();
-  hide_task_modal(`#${task_add_btn.dataset['target']}`);
+  toggle_task_modal_visibility(`#${task_add_btn.dataset['target']}`);
 });
 
 close_task_modal.addEventListener('click', (e)=> {
   e.preventDefault();
-  hide_task_modal();
+  toggle_task_modal_visibility();
 });
 
 
@@ -490,7 +730,14 @@ const validate_form_values = ( title, date, priority) => {
 
 
 
+
+
+
 // ****** TASK CREATION HANDLER ******
+
+
+
+
 
 
 /**
@@ -523,8 +770,39 @@ const create_new_task = (tags, due_date, task_title, reminder, priority, target_
 
 
 
+/**
+ * Updates an existing task object ( retrieved by the passed `task_id`) with
+ * submitted form data.
+ * @param {String} task_id representing a task unique identifier
+ * @param {Object} form_data key & value pairs of form submitted data
+ */
+const update_task = ( task_id, form_data ) => {
+  let task = retrieve_task(task_id);
+  
+  
+  // update retrieved task
+  task.tags = form_data.form_tag;
+  task.title = form_data.form_title;
+  task.targetDate = form_data.form_data;
+  task.targetTime = form_data.form_title;
+  task.reminder = form_data.form_reminder;
+  task.priority = form_data.form_priority; 
+  task.timeStamp = form_data.form_timestamp;
+
+  return task;
+}
+
+
+
+
+
 
 // ****** UTILIZER OF FORM VALUE VALIDATION & CREATION OF TASK ******
+
+
+
+
+
 
 
 
@@ -539,21 +817,24 @@ const create_new_task = (tags, due_date, task_title, reminder, priority, target_
  * will return the created task
  */
 const process_task_form = ( ) => {
-  let all_priority = document.getElementsByName('priority');
+  
   let task_title = get('#id_task_title').value;
   let target_time = get("#id_task_time").value;
   let date_val = get('#id_task_date').value;
   let reminder = get('#id_reminder').checked;
   let tags = get('#id_task_tags').value;
-  let selected_priority = '';
+  let selected_priority = dom_checked_priority_iterator().value;
+  
 
-  all_priority.forEach( ele => {
-    let element = get(`#${ele.id}`);
+  let is_update;
+  let form_dataset_task_id = get("#id-task-creation-form").dataset.task_id;
+  delete get("#id-task-creation-form").dataset.task_id;
 
-    if (element.checked){
-      selected_priority = element.value;
+  if(form_dataset_task_id) {
+    if(form_dataset_task_id != "" && form_dataset_task_id.length > 0) {
+      is_update = true;
     }
-  });
+  }
   
 
   /**
@@ -563,23 +844,42 @@ const process_task_form = ( ) => {
    */
 
   let validation_results = validate_form_values(
-    task_title, date_val, selected_priority);
+    task_title, date_val, selected_priority
+  );
 
   let form_valid = validation_results[0]
   let validation_message = validation_results[1]
-  
-  console.log(validation_message);
-  console.log(form_valid)
+
   /**
    * a new task will only be created if validation_response
    * is true, otherwise, nothing is done.
    */
   if (form_valid === true){
+
+
+    /**
+     * A task form can either be used for updating an existing task
+     * or creating a new task. 
+     * 
+     * There is need to check if the form submitted is either for 
+     * task update or task creation.
+     */
+    
+    
     unhide_message_board("success-message-board");
-    display_message(validation_message, "success-msg-note");
     reset_form("id-task-creation-form");
-    return create_new_task(
+    let task = create_new_task(
       tags, date_val, task_title, reminder, selected_priority, target_time);
+
+    if(is_update){
+      task.id = form_dataset_task_id;
+      display_message(validation_message, "success-msg-note");
+    } else {
+      display_message(validation_message, "success-msg-note");
+    }
+
+    return task;
+    
   } else {
     // display erroneous validation messages
     unhide_message_board("form-message-board");
@@ -596,20 +896,34 @@ let createTaskBtn = get('#add_to_list_btn');
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
+  
   if (task){
     // close task creation modal
-    hide_task_modal();
+    toggle_task_modal_visibility();
 
-     // add it to application storage and persist in local storage
-     STORAGE.unshift(task);
-     console.log(STORAGE);
+    persist_data(STORAGE, task,  "tasks");
 
-    // adding task to DOM
-    add_task_to_dom(task);
-
-    persist_data(STORAGE, "tasks");
+    // add updating handler
+    task_update_handler();
   }
+
+  // adding task to DOM
+  update_task_dom(STORAGE);
+  document.location.reload();
 });
+
+
+// one time call
+task_update_handler();
+
+
+
+
+
+
+
+
+
 
 
 
