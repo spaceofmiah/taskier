@@ -28,6 +28,7 @@ export default class Task {
 		this.timeStamp = new Date();
 		this.targetTime = targetTime;
 		this.dateCreated = creationDate;
+		this.id = this.title.substring(0, 2) + Math.floor(Math.random() * 100000)
 		console.log("created successfully");
 	}
 

@@ -169,15 +169,15 @@ const add_task_to_dom = ( task ) =>
 
 
      <span class="card-btns">
-         <button class="card-btn__edit" data>
+         <button class="card-btn__edit" data-task="${task.id}">
            <i class="fas fa-pen"></i>
          </button>
 
-         <button class="card-btn__complete">
+         <button class="card-btn__complete" data-task="${task.id}">
            <i class="fas fa-check"></i>
          </button>
 
-         <button class="card-btn__delete">
+         <button class="card-btn__delete" data-task="${task.id}">
            <i class="fas fa-trash"></i>
          </button>
      </span>
