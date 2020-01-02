@@ -10,10 +10,10 @@
 */ 
 
 
-import { Calendar, preventDefault } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import '@fullcalendar/core/main.css';
-import '@fullcalendar/daygrid/main.css';
+// import { Calendar, preventDefault } from '@fullcalendar/core';
+// import dayGridPlugin from '@fullcalendar/daygrid';
+// import '@fullcalendar/core/main.css';
+// import '@fullcalendar/daygrid/main.css';
 
 
 import Task from './Task';
@@ -92,6 +92,8 @@ const clear_data = (storage_name) => {
   * @param {String} db_name 
   *     this is more like table name in RDBMS. it specify the table
   *     whose data are to be removed
+  * 
+  * @returns Updated application storage, containing most updated data.
   */
 const persist_data = ( app_storage, data,  db_name="tasks") => {
   let previous_data = retrieve_data(db_name);
@@ -133,6 +135,8 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
 
   // add new data to the specified storage name
   localStorage.setItem(db_name, JSON.stringify(app_storage));
+
+  return app_storage;
  }
 
 
@@ -177,6 +181,29 @@ const get = element_identifier => {
 
 
 /**
+ * removes all child element from DOM
+ * @param {String} element_key element's unique identifier ( class or id)
+ */
+const remove_all_child_element = ( element_key ) => {
+  let parent_list = get(element_key);
+
+  parent_list.forEach(parent => {
+    if(parent.childElementCount){
+      for(let i=0; i <= parent.childElementCount; i++){
+        console.log(`removing ${(parent.children[i])}`);
+        parent.removeChild(parent.children[i]);
+      }
+    }
+  });
+}
+
+
+
+
+
+
+
+/**
  * utility method to add task to DOM
  * @param {Object} task an instance of Task class
  */
@@ -184,7 +211,8 @@ const update_task_dom = ( storage ) =>
 {
   let parent = document.querySelector('.task-container');
   let task_obj;
-
+  
+  remove_all_child_element('.task-container');
   storage.forEach(task => {
     let date = new Date(task.targetDate).toDateString();
     let tag_txt = "";
@@ -235,9 +263,7 @@ const update_task_dom = ( storage ) =>
   })
 
   
-
   
- 
   parent.innerHTML += task_obj;
 }
 
@@ -271,7 +297,11 @@ const dom_checked_priority_iterator = () => {
 }
 
 
-
+/**
+ * Iterates trhough priority form fields (which are radio button)
+ * and returns only the field (DOM element) whose value matches the passed value.
+ * @param {String} value a string value can either be ('red', 'green', 'purple')
+ */
 const dom_priority_value_iterator = (value) => {
   let all_priority = document.getElementsByName('priority');
 
@@ -587,8 +617,11 @@ const retrieve_task = ( task_id ) => {
  */
 
 
-
-const task_update_handler = ( ) => {
+/**
+ * sets update event listener on all task instances present 
+ * on the DOM through iteration.
+ */
+const set_task_update_event = ( ) => {
   let edit_task_btn = document.querySelectorAll(".edit-task-btn");
 
   edit_task_btn.forEach( edit_btn  => {
@@ -848,7 +881,7 @@ const process_task_form = ( ) => {
   );
 
   let form_valid = validation_results[0]
-  let validation_message = validation_results[1]
+  let validation_messages = validation_results[1]
 
   /**
    * a new task will only be created if validation_response
@@ -856,7 +889,7 @@ const process_task_form = ( ) => {
    */
   if (form_valid === true){
 
-
+    
     /**
      * A task form can either be used for updating an existing task
      * or creating a new task. 
@@ -873,9 +906,9 @@ const process_task_form = ( ) => {
 
     if(is_update){
       task.id = form_dataset_task_id;
-      display_message(validation_message, "success-msg-note");
+      display_message(["successfully updated",], "success-msg-note");
     } else {
-      display_message(validation_message, "success-msg-note");
+      display_message(validation_messages, "success-msg-note");
     }
 
     return task;
@@ -883,7 +916,7 @@ const process_task_form = ( ) => {
   } else {
     // display erroneous validation messages
     unhide_message_board("form-message-board");
-    display_message(validation_message, "form-msg-note");
+    display_message(validation_messages, "form-msg-note");
   }
 }
 
@@ -896,25 +929,27 @@ let createTaskBtn = get('#add_to_list_btn');
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
+  let storage;
   
   if (task){
     // close task creation modal
     toggle_task_modal_visibility();
 
-    persist_data(STORAGE, task,  "tasks");
-
-    // add updating handler
-    task_update_handler();
+    storage = persist_data(STORAGE, task,  "tasks");
   }
 
+
   // adding task to DOM
-  update_task_dom(STORAGE);
-  document.location.reload();
+  update_task_dom(storage);
+
+
+  // add updating handler
+  set_task_update_event();
 });
 
 
 // one time call
-task_update_handler();
+set_task_update_event();
 
 
 
