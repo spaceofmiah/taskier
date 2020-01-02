@@ -629,6 +629,8 @@ const set_task_update_event = ( ) => {
       e.preventDefault();
   
   
+      get("#add_to_list_btn").value = "Save changes";
+      
       let query_response = retrieve_task(edit_btn.dataset.task);
       if (query_response[0] === true ){
         toggle_task_modal_visibility();
