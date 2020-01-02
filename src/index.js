@@ -6,8 +6,18 @@
  * Below is an index of all sections:
  * 
  * SECTION 1        ------    CREATE UTILITY METHOD
- * 
+ * SECTION 2        ------    APP STORAGE MANIPULATION TASK FORM UTILITY
+ * SECTION 3        ------    USER EXPERIENCE
 */ 
+
+
+
+
+
+
+
+
+
 
 
 // import { Calendar, preventDefault } from '@fullcalendar/core';
@@ -45,19 +55,30 @@ import Task from './Task';
  * 
  *                    CREATE UTILITY METHODS
  * 
- *  This section contains code to interact with local storage object
+ *  This section contains code to interact with local storage object and 
+ *  DOM manipulation
  *  
- *  -- persisting data to local storage
- *  -- retrieving data from local storage
- *  -- clearing data on local storage
+ *        TOPIC                                         FILE SEARCH KEY
+ * 
+ *  -- persisting data to local storage                 data_persistence
+ *  -- retrieving data from local storage                data_retrieval
+ *  -- clearing data on local storage                     clear_table
+ *  -- clearing database data                              delete_all
+ *  -- dom element retrieval                         dom_element_retrieval
+ *  -- dom element children removal              dom_element_children_removal
+ *  -- dom element ( task container ) updater        task_container_updater
+ *  -- dom priority check ( is radio button           dom_priority_check
+ *     checked ?)  
+ *  -- dom priority value ( does radio button         dom_priority_value
+ *     value same ?)
+ *  -- populater - task form field                populate_task_form_fields
+ *  -- class list toggler                       dom_element_class_list_toggler
  * 
  * ================================================================
  */
 
 
-
-
-
+// *****  data_retrieval
 
 /**
   * retrieve all data from the specified storage
@@ -70,7 +91,7 @@ import Task from './Task';
 }
 
 
-
+// ***** clear_table
 
  /**
   * Clears all data in the specified storage
@@ -82,6 +103,7 @@ const clear_data = (storage_name) => {
   localStorage.removeItem(storage_name);
 }
 
+// ***** data_persistence
 
 /**
   * Persist data to the specified storage name
@@ -140,6 +162,8 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
  }
 
 
+// ***** delete_all
+
  /**
   * Delete all available
   */
@@ -148,12 +172,12 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
  }
 
 
+/***
+*    DOM Manipulation
+*/
 
 
-
-
-
-
+// **** dom_element_retrieval
 
 /**
  * simplify the process of retrieving a DOM element
@@ -178,7 +202,7 @@ const get = element_identifier => {
 };
 
 
-
+// ***** dom_element_children_removal
 
 /**
  * removes all child element from DOM
@@ -198,10 +222,7 @@ const remove_all_child_element = ( element_key ) => {
 }
 
 
-
-
-
-
+// *****   task_container_updater
 
 /**
  * utility method to add task to DOM
@@ -260,16 +281,10 @@ const update_task_dom = ( storage ) =>
    </div>
   `;
 
-  })
-
-  
+  });
   
   parent.innerHTML += task_obj;
 }
-
-
-
-
 
 
 
@@ -278,6 +293,9 @@ const update_task_dom = ( storage ) =>
  //*    define the order of task in terms of importance
  //*    and relevance.
 
+
+
+ // ***** dom_priority_check
  
 
 /**
@@ -295,6 +313,10 @@ const dom_checked_priority_iterator = () => {
 
   return returning_element;
 }
+
+
+
+// ***** dom_priority_value
 
 
 /**
@@ -316,11 +338,7 @@ const dom_priority_value_iterator = (value) => {
 
 
 
-
-
-
-
-
+// ***** populate_task_form_fields
 
 
 /**
@@ -380,6 +398,7 @@ const populate_task_form = (task) => {
 
 
 
+// **** dom_element_class_list_toggler
 
 
 
@@ -423,19 +442,59 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
 
 
 
-
-
 /**
- * this section contains code that handles the core functionality of 
- * validation messages
  * 
- *  -- unhide validation message board
- *  -- hide validation message board
- *  -- display validation messages
- *  -- hide implementer
+ *                          SECTION 2
+ * ================================================================
+ * ================================================================
+ *           APP STORAGE MANIPULATION TASK FORM UTILITY
+ * 
+ * this section contains code that handles the core functionality of 
+ * validation messages and application storage manipulation.
+ *        
+ * 
+ *          TOPIC                                     FILE SEARCH KEY
+ * 
+ *  -- unhide & hide form validation message            message_board
+ *     board         
+ *  -- display validation messages                       display_msg
+ *  -- hide message board implement                      hide_board
+ *  -- retrieving task from app storage                task_retrieval
+ *  -- handler to edit existing task                listener_4_task_edit
+ *  -- cancel and create/update task form         task_form_button_listener
+ *     button event handler
+ *  -- reset task form fields                         task_form_reset
+ *  -- task form value validator                       form_validator
+ *  -- create task from submitted form value             create_task
+ *  -- update task from submitted form value             update_task
+ *  -- process task form using form validator,        process_task_form
+ *     message board and create or update handler
+ *  -- create task button listener                   create_task_listener  
+ * 
+ * ================================================================
  */
 
 
+let STORAGE = [];
+
+ /***
+ * This section contains code to automatically populate 
+ * DOM list on application startup
+ */
+{
+  let data = retrieve_data('tasks');
+  if (data){
+    STORAGE = [...data];
+    if (data){
+      data.map(task => {
+        update_task_dom(STORAGE);
+      });
+    }
+  }
+}
+
+
+ // ***** message_board
 
 
  /**
@@ -487,6 +546,8 @@ const hide_message_board = ( message_board_id ) => {
   dom_classlist_toggler(message_board_id, 'unhidden', 'hide');
 }
 
+// ***** display_msg
+
 
 /**
  * Displays message to message board
@@ -504,6 +565,7 @@ const display_message = ( msg_list, message_board_id ) => {
   });
 }
 
+// ****** hide_board
 
 /**
  * hides message board when message close button is clicked
@@ -516,59 +578,7 @@ message_close_btn.forEach((close_btn) => {
 })
 
 
-
-
-
-
-
-
-
-/**
- * This section contains code to:
- * 
- *  --- Toggle on and off creation of new task form
- *  --- validate form value to create task
- *  --- Creation of new task
- *  --- Updating of an already existing task 
- */
-
-
-
- // ***** CREATE STORAGE TO HOLD CREATED & UPDATED TASK *****
-
-
- let STORAGE = [];
-
-
-
- /***
- * This section contains code to automatically populate 
- * DOM list on application startup
- */
-
-
-{
-  let data = retrieve_data('tasks');
-  if (data){
-    STORAGE = [...data];
-    if (data){
-      data.map(task => {
-        update_task_dom(STORAGE);
-      });
-    }
-  }
-}
-
-
-
-
-
-
-// ****** UPDATING A TASK ******
-
-
-
-
+// ***** task_retrieval
 
 /**
  * Query storage and return task whose id is 
@@ -600,22 +610,7 @@ const retrieve_task = ( task_id ) => {
   return [false, 'no task with id found'];
 }
 
-
-
-
-
-
-
-
-
-/**
- * EDITING A TASK
- * 
- *  -- retrieve the task that is to be edited
- *  -- populate update form with the current value of the task
- *  -- when form is submitted, the updated value is persisted.
- */
-
+// ***** listener_4_task_edit
 
 /**
  * sets update event listener on all task instances present 
@@ -641,17 +636,7 @@ const set_task_update_event = ( ) => {
   });
 }
 
-
-
-
-
-
-
-
-
-
- // ***** TOGGLE ON AND OFF FORM FOR CREATING NEW TASK  *****
-
+// ***** task_form_button_listener
 
 let task_add_btn = get('#task-add-btn');
 let close_task_modal = get("#close-task-modal");
@@ -672,12 +657,7 @@ close_task_modal.addEventListener('click', (e)=> {
 });
 
 
-
-
-
-
-// ****** RESET FORM VALUE ******
-
+// ***** task_form_reset
 
 /**
  * Resets the value of form 
@@ -689,13 +669,7 @@ const reset_form = ( form_id ) => {
 }
 
 
-
-
-
-// ****** VALIDATE FORM VALUE TO CREATE TASK ******
-
-
-
+// ***** form_validator
 
 /**
  * Validates submitted form values. This raises an exception if 
@@ -763,18 +737,7 @@ const validate_form_values = ( title, date, priority) => {
   return [true, ["success",]];
 }
 
-
-
-
-
-
-
-// ****** TASK CREATION HANDLER ******
-
-
-
-
-
+// ***** create_task
 
 /**
  * Creates a task and returns it -- serving as task creation handler.
@@ -803,8 +766,7 @@ const create_new_task = (tags, due_date, task_title, reminder, priority, target_
     return task;
 }
 
-
-
+// ***** update_task
 
 /**
  * Updates an existing task object ( retrieved by the passed `task_id`) with
@@ -814,7 +776,6 @@ const create_new_task = (tags, due_date, task_title, reminder, priority, target_
  */
 const update_task = ( task_id, form_data ) => {
   let task = retrieve_task(task_id);
-  
   
   // update retrieved task
   task.tags = form_data.form_tag;
@@ -829,20 +790,9 @@ const update_task = ( task_id, form_data ) => {
 }
 
 
-
-
-
+// ***** process_task_form
 
 // ****** UTILIZER OF FORM VALUE VALIDATION & CREATION OF TASK ******
-
-
-
-
-
-
-
-
-
 
 /**
  * retrieves task creation form field values, call validation method
@@ -923,7 +873,7 @@ const process_task_form = ( ) => {
   }
 }
 
-
+// ***** create_task_listener
 
 /*** TASK CREATION EVENT TRIGGERER  */
 
@@ -965,19 +915,26 @@ set_task_update_event();
 
 
 
-
-
-
-
 /**
- * This section contains code to:
  * 
- *  --- Change application color theme
- *  --- Change application theme icon
+ *                          SECTION 3
+ * ================================================================
+ * ================================================================
+ *                       USER EXPERIENCE
+ * 
+ *  This section contains code which create app interface experience
+ *  with user interactions
+ *  
+ *        TOPIC                                         FILE SEARCH KEY
+ * 
+ *  -- Change application color theme                   change_theme_color
+ *  -- Change application theme icon                    change_theme_icon
+ * ================================================================
  */
 
 
 
+ // ***** change_theme_color
  // ***** CHANGE APPLICATION COLOR THEME ******
  let themeButton = get('#theme-btn');
 
@@ -991,8 +948,8 @@ set_task_update_event();
  }
 
 
-
- // ***** CHANGE APPLICATION COLOR THEME ******
+// ***** change_theme_icon
+// ***** CHANGE APPLICATION COLOR THEME ******
 
 /**
  * changes icon on the theme button -- icon can either be a 
