@@ -630,7 +630,7 @@ const set_task_update_event = ( ) => {
   
   
       get("#add_to_list_btn").value = "Save changes";
-      
+
       let query_response = retrieve_task(edit_btn.dataset.task);
       if (query_response[0] === true ){
         toggle_task_modal_visibility();
@@ -663,6 +663,7 @@ const toggle_task_modal_visibility = ( element='#new-task-modal') => {
 task_add_btn.addEventListener('click', (e) => {
   e.preventDefault();
   toggle_task_modal_visibility(`#${task_add_btn.dataset['target']}`);
+  get("#add_to_list_btn").value = "Add to list";
 });
 
 close_task_modal.addEventListener('click', (e)=> {
