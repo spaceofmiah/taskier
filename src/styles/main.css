@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: none;
+}
+
 .bg-ease-change {
   transition: background-color .3s ease-in-out;
 }
@@ -124,6 +128,27 @@ body {
 }
 
 
+.modal {
+  top: 80px;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 39px;
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  background-color: #a99f9ff7;
+}
+
+
+
+.modal-content-wrap {
+  width: 800px;
+  padding: 18px;
+  border-radius: 4px;
+  height: max-content;
+  background-color: var(--white-color);
+}
 
 
 /* Navigation bar styles */
@@ -300,30 +325,49 @@ a.card-tag {
 }
 
 
+/**
+  Proceed With Operation modal styles (PWO)
+**/
+
+#pwo-content {
+  align-self: center;
+  width: 600px;
+}
+
+#operation-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#pwo-btns {
+  display: flex;
+  margin-top: 18px;
+  justify-content: space-between;
+}
+
+.pwo-btn {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  color: white;
+  background: black;
+}
+
+#pwo-yes_btn {
+  background-color: var(--purple-color);
+}
+
+#pwo-no_btn {
+  background-color: var(--red-color);
+}
+
+
+
 
 /**
   Task add modal styles
 **/
-#new-task-modal {
-  top: 80px;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  padding: 39px;
-  display: flex;
-  position: fixed;
-  justify-content: center;
-  background-color: #000000;
-}
 
-
-#nwt_form-wrap {
-  width: 800px;
-  padding: 18px;
-  border-radius: 4px;
-  height: max-content;
-  background-color: var(--white-color);
-}
 
 #close-task-modal {
   font-size: 16px;
@@ -384,16 +428,20 @@ a.card-tag {
     margin: 2px 0;
   }
 
-  #new-task-modal {
+  .modal {
     padding: 0;
     display: block;
   }
 
-  #nwt_form-wrap {
+  .modal-content-wrap {
     width: 100%;
     height: 100%;
     padding: 18px 18px 98px 18px;
     border-radius: 0;
     overflow-y: scroll;
+  }
+
+  #pwo-content {
+    width: 100%;
   }
 }

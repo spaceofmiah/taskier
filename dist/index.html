@@ -149,9 +149,23 @@
         <div id="calendar"></div>
       </section> -->
 
+      <!-- PWO -- Proceed with Operaton modal -->
+      <div class="modal hide" id="proceed-with-operation">
+        <div class="modal-content-wrap" id="pwo-content">
+          <p id="operation-text">Are you sure you want to preceed with this operation</p>
 
-      <div class="hide" id="new-task-modal">
-        <div id="nwt_form-wrap">
+          <div id="pwo-btns">
+            <a href="#" class="pwo-btn" id="pwo-yes_btn">Yes, proceed</a>
+  
+             <a href="#" class="pwo-btn" id="pwo-no_btn">No, was just joking</a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Task modal form -->
+      <div class="hide modal" id="new-task-modal">
+        <div class="modal-content-wrap" id="nwt_form-wrap">
 
           <h2>Task form</h2>
           <div class="error-msg msg hide" id="form-message-board">

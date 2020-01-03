@@ -60,10 +60,12 @@ import Task from './Task';
  *  
  *        TOPIC                                         FILE SEARCH KEY
  * 
- *  -- persisting data to local storage                 data_persistence
  *  -- retrieving data from local storage                data_retrieval
+ *  -- checks if a data is present in database            data_presence
+ *  -- persisting data to local storage                 data_persistence
  *  -- clearing data on local storage                     clear_table
- *  -- clearing database data                              delete_all
+ *  -- persisting data to local storage                 set_table_data
+ *  -- delete an item from database                       delete_item
  *  -- dom element retrieval                         dom_element_retrieval
  *  -- dom element children removal              dom_element_children_removal
  *  -- dom element ( task container ) updater        task_container_updater
@@ -82,42 +84,34 @@ import Task from './Task';
 
 /**
   * retrieve all data from the specified storage
-  * @param {String} storage_name 
-  *     this is more like table name in RDBMS. it specify the table
-  *     whose data are to be removed
-  */
- const retrieve_data = (storage_name) => {
-  return JSON.parse(localStorage.getItem(storage_name));
-}
-
-
-// ***** clear_table
-
- /**
-  * Clears all data in the specified storage
-  * @param {String} storage_name 
-  *     this is more like table name in RDBMS. it specify the table
-  *     whose data are to be removed
-  */
-const clear_data = (storage_name) => {
-  localStorage.removeItem(storage_name);
-}
-
-// ***** data_persistence
-
-/**
-  * Persist data to the specified storage name
-  * @param {Object} app_storage 
-  *     stores data for usage
-  * @param {Object} data
-  *     the new data to be add to storage
   * @param {String} db_name 
   *     this is more like table name in RDBMS. it specify the table
   *     whose data are to be removed
-  * 
-  * @returns Updated application storage, containing most updated data.
   */
-const persist_data = ( app_storage, data,  db_name="tasks") => {
+ const retrieve_data = (db_name) => {
+  return JSON.parse(localStorage.getItem(db_name));
+}
+
+
+// **** data_presence
+
+/**
+ * checks if a data is present in the persisted table (not application storage).
+ * returns every other data that are present excluding the passed data
+ * whose presence is checked for
+ * @param {Object} data 
+ *     the data whose presence is to be checked for
+ * @param {String} db_name 
+ *     this is more like table name in RDBMS. it specify the table
+ *     whose data are to be removed
+ * 
+ * @returns {Array} 
+ * 
+ *     Boolean  ---> first item
+ * 
+ *     Array of Data  Present in DB   --> second item
+ */
+const db_core = ( data, db_name ) => {
   let previous_data = retrieve_data(db_name);
   let result;
 
@@ -137,14 +131,73 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
       *      if a task id equals the id of the task to be added, then
       *      that task will not be in the result set returned after
       *      filtering
-      * 
-      *   -- add the task to be add.
       */
      
-    result = previous_data.filter(item => item.id != data.id);
-    result.unshift(data);
+    result = previous_data.filter(item => item.id !== data.id);
 
-    // console.log(result);
+    return [true, result]
+  }
+
+  return [ false, data];
+}
+
+
+// ***** clear_table
+
+ /**
+  * Clears all data in the specified storage name on local storage.
+  * Use this with caution as it doesn't care about existing data.
+  * 
+  * NOTE: 
+  *    if you want to use this function but still care  about existing data, 
+  *    check on retrieve_data function
+  * @param {String} db_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  */
+const clear_storage = (db_name) => {
+  localStorage.removeItem(db_name);
+}
+
+
+// ***** set_table_data
+/**
+ * This helps to set an application data on persisted database (local storage).
+ * Use this with caution as it doesn't care about existing data. 
+ * 
+ * NOTE: 
+ *    if you want to use this function but still care  about existing data, 
+ *    check on retrieve_data function
+ * @param {Object} data 
+ *     an application data to be persisted
+ * @param {String} db_name
+ *     this is more like table name in RDBMS. it specify the table
+ *     whose data are to be removed 
+ */
+const set_storage = (data, db_name) => {
+  localStorage.setItem(db_name, JSON.stringify(data));
+}
+
+// ***** data_persistence
+
+/**
+  * Persist data to the specified storage name
+  * @param {Object} app_storage 
+  *     stores data for usage
+  * @param {Object} data
+  *     the new  data to be add to storage
+  * @param {String} db_name 
+  *     this is more like table name in RDBMS. it specify the table
+  *     whose data are to be removed
+  * 
+  * @returns {Array} Updated application storage containing most updated data.
+  */
+const persist_data = ( app_storage, data,  db_name="tasks") => {
+  let response = db_core(data, db_name);
+
+  if (response[0] === true){
+    let result = response[1];
+    result.unshift(data);
     app_storage = [...result];
     console.log("app-storage\n", app_storage)
   } else {
@@ -153,22 +206,39 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
   }
 
   // remove all existing data ( old data ) from database
-  clear_data(db_name);
+  clear_storage(db_name);
 
   // add new data to the specified storage name
-  localStorage.setItem(db_name, JSON.stringify(app_storage));
+  set_storage(app_storage, db_name);
 
   return app_storage;
  }
 
 
-// ***** delete_all
+// ***** delete_item
 
- /**
-  * Delete all available
-  */
- const drop_db = ( ) => {
-   localStorage.clear();
+/**
+ * 
+ * @param {Object} app_storage 
+ *    that stores data for application
+ * @param {Object} data 
+ *     the new  data to be deleted from storage
+ * @param {String} db_name 
+ *     this is more like table name in RDBMS. it specify the table
+ *     whose data are to be removed
+ * 
+ * @returns {Array} Updated application storage containing most updated data.
+ */
+ const delete_task_item = ( app_storage, data, db_name) => {
+   let response = db_core(data, db_name);
+
+   if (response[0] === true){
+     app_storage = response[1];
+     clear_storage("tasks");
+     set_storage(app_storage, db_name);
+   }
+
+    return app_storage;
  }
 
 
@@ -214,7 +284,6 @@ const remove_all_child_element = ( element_key ) => {
   parent_list.forEach(parent => {
     if(parent.childElementCount){
       for(let i=0; i <= parent.childElementCount; i++){
-        console.log(`removing ${(parent.children[i])}`);
         parent.removeChild(parent.children[i]);
       }
     }
@@ -449,8 +518,9 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
  * ================================================================
  *           APP STORAGE MANIPULATION TASK FORM UTILITY
  * 
- * this section contains code that handles the core functionality of 
- * validation messages and application storage manipulation.
+ * this section contains code that handles the app's core functionality  
+ * e.g validation messages functionality, application storage 
+ * manipulation and application core processes.
  *        
  * 
  *          TOPIC                                     FILE SEARCH KEY
@@ -460,11 +530,17 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
  *  -- display validation messages                       display_msg
  *  -- hide message board implement                      hide_board
  *  -- retrieving task from app storage                task_retrieval
+ *  -- modal visibility toggler                        modal_visibilty
+ *  -- delete operation triggered from PWO          task_delete_operation
+ *  -- Proceed With Operation (PWO) handler              pwo_handler
+ *  -- Proceed With Operation (PWO) event            pwo_event_listeners
+ *     listener   
  *  -- handler to edit existing task                listener_4_task_edit
+ *  -- handler to delete existing task             listener_4_task_delete
  *  -- cancel and create/update task form         task_form_button_listener
  *     button event handler
  *  -- reset task form fields                         task_form_reset
- *  -- task form value validator                       form_validator
+ *  -- task form field value validator                  form_validator
  *  -- create task from submitted form value             create_task
  *  -- update task from submitted form value             update_task
  *  -- process task form using form validator,        process_task_form
@@ -610,6 +686,67 @@ const retrieve_task = ( task_id ) => {
   return [false, 'no task with id found'];
 }
 
+// ***** modal_visibilty
+
+/**
+ * toggles the visibility of a modal
+ * @param {String} element 
+ *    DOM element modal id. This defaults to  `new-task-modal`
+ */
+const toggle_modal_visibility = ( element='#new-task-modal') => {
+  get(element).classList.toggle('hide');
+}
+
+
+
+// ***** task_delete_operation
+/**
+ * Deletes a task from storage and update task container
+ * dom using available tasks in storage
+ * @param {String} task_id
+ */
+const task_delete_operation = ( task_id ) => {
+  let task_to_delete = retrieve_task(task_id)[1];
+  STORAGE = delete_task_item(STORAGE, task_to_delete, "tasks");
+  update_task_dom(STORAGE);
+}
+
+// ***** pwo_handler
+/**
+ * processes event type when `YES` button is clicked on proceed
+ * with operation modal (PWO modal). 
+ * 
+ * Based on the event type, the right event handler is called.
+ * 
+ *  EVENT TYPES               CALLED HANDLER
+ *  
+ *  -- delete-task            task_delete_operation
+ *  -- complete-task
+ */
+const yes_proceed_handler_processer = ( ) => {
+  let pwo_yes_btn = get("#pwo-yes_btn");
+  let operation_type = pwo_yes_btn.dataset.operation_type;
+  let task_id = pwo_yes_btn.dataset.task_id;
+
+  if(operation_type === "delete-task"){
+    task_delete_operation(task_id);
+    toggle_modal_visibility("#proceed-with-operation");
+  }
+}
+
+// **** pwo_event_listeners
+
+get("#pwo-yes_btn").addEventListener(
+  'click', yes_proceed_handler_processer);
+
+get('#pwo-no_btn').addEventListener('click', () => {
+  delete get("#pwo-yes_btn").dataset.task_id;
+  delete get("#pwo-yes_btn").dataset.operation_type;
+  toggle_modal_visibility("#proceed-with-operation");
+});
+
+
+
 // ***** listener_4_task_edit
 
 /**
@@ -628,12 +765,34 @@ const set_task_update_event = ( ) => {
 
       let query_response = retrieve_task(edit_btn.dataset.task);
       if (query_response[0] === true ){
-        toggle_task_modal_visibility();
+        toggle_modal_visibility();
         populate_task_form(query_response[1]);
       }
-  
     });
   });
+}
+
+
+// ***** listener_4_task_delete
+
+/***
+ * sets delete listener on all available task delete button on the DOM,
+ * open up P.W.O modal and set values ( operation-type and task_id ) to
+ * proceed with operation yes button
+ */
+const set_task_delete_event = () => {
+  let task_delete_btn = get(".card-btn__delete");
+  task_delete_btn.forEach((delete_btn) => {
+    delete_btn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      toggle_modal_visibility('#proceed-with-operation');
+      let pwo_yes_btn = get("#pwo-yes_btn");
+
+      pwo_yes_btn.dataset.task_id = delete_btn.dataset.task;
+      pwo_yes_btn.dataset.operation_type = "delete-task";
+    })
+  })
 }
 
 // ***** task_form_button_listener
@@ -641,19 +800,17 @@ const set_task_update_event = ( ) => {
 let task_add_btn = get('#task-add-btn');
 let close_task_modal = get("#close-task-modal");
 
-const toggle_task_modal_visibility = ( element='#new-task-modal') => {
-  get(element).classList.toggle('hide');
-}
+
 
 task_add_btn.addEventListener('click', (e) => {
   e.preventDefault();
-  toggle_task_modal_visibility(`#${task_add_btn.dataset['target']}`);
+  toggle_modal_visibility(`#${task_add_btn.dataset['target']}`);
   get("#add_to_list_btn").value = "Add to list";
 });
 
 close_task_modal.addEventListener('click', (e)=> {
   e.preventDefault();
-  toggle_task_modal_visibility();
+  toggle_modal_visibility();
 });
 
 
@@ -886,7 +1043,7 @@ createTaskBtn.addEventListener('click', (e) => {
   
   if (task){
     // close task creation modal
-    toggle_task_modal_visibility();
+    toggle_modal_visibility();
 
     storage = persist_data(STORAGE, task,  "tasks");
   }
@@ -898,11 +1055,18 @@ createTaskBtn.addEventListener('click', (e) => {
 
   // add updating handler
   set_task_update_event();
+
+  // add deleting handler
+  set_task_delete_event();
 });
+
+
+
 
 
 // one time call
 set_task_update_event();
+set_task_delete_event();
 
 
 
