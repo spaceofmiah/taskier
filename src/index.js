@@ -298,7 +298,7 @@ const remove_all_child_element = ( element_key ) => {
 const update_task_dom = ( storage ) => 
 {
   let parent = document.querySelector('.task-container');
-  let task_obj;
+  let task_obj = "";
 
   remove_all_child_element('.task-container');
   
