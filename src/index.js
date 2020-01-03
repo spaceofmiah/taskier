@@ -551,7 +551,7 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
  */
 
 
-let STORAGE = [];
+let TASK_STORAGE = [];
 
  /***
  * This section contains code to automatically populate 
@@ -560,10 +560,10 @@ let STORAGE = [];
 {
   let data = retrieve_data('tasks');
   if (data){
-    STORAGE = [...data];
+    TASK_STORAGE = [...data];
     if (data){
       data.map(task => {
-        update_task_dom(STORAGE);
+        update_task_dom(TASK_STORAGE);
       });
     }
   }
@@ -673,7 +673,7 @@ const retrieve_task = ( task_id ) => {
 
   let result;
 
-  STORAGE.forEach(task => {
+  TASK_STORAGE.forEach(task => {
     if(task.id === task_id){
       result = [true, task];
     }
@@ -707,8 +707,8 @@ const toggle_modal_visibility = ( element='#new-task-modal') => {
  */
 const task_delete_operation = ( task_id ) => {
   let task_to_delete = retrieve_task(task_id)[1];
-  STORAGE = delete_task_item(STORAGE, task_to_delete, "tasks");
-  update_task_dom(STORAGE);
+  TASK_STORAGE = delete_task_item(TASK_STORAGE, task_to_delete, "tasks");
+  update_task_dom(TASK_STORAGE);
 }
 
 // ***** pwo_handler
@@ -1039,18 +1039,18 @@ let createTaskBtn = get('#add_to_list_btn');
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
-  let storage;
+  let TASK_STORAGE;
   
   if (task){
     // close task creation modal
     toggle_modal_visibility();
 
-    storage = persist_data(STORAGE, task,  "tasks");
+    TASK_STORAGE = persist_data(TASK_STORAGE, task,  "tasks");
   }
 
 
   // adding task to DOM
-  update_task_dom(storage);
+  update_task_dom(TASK_STORAGE);
 
 
   // add updating handler
