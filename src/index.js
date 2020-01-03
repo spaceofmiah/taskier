@@ -282,7 +282,6 @@ const remove_all_child_element = ( element_key ) => {
   
   parent.childNodes.forEach((ele, i) => {
     parent.removeChild(ele)
-    console.log(parent.children[i])
     if(parent.children[i]){
         parent.removeChild(parent.children[i])
     }
@@ -557,17 +556,13 @@ let TASK_STORAGE = [];
 
  /***
  * This section contains code to automatically populate 
- * DOM list on application startup
+ * DOM list on application startupf
  */
 {
   let data = retrieve_data('tasks');
   if (data){
     TASK_STORAGE = [...data];
-    if (data){
-      // data.map(() => {
-        update_task_dom(data);
-      // });
-    }
+    update_task_dom(TASK_STORAGE);
   }
 }
 
@@ -711,6 +706,12 @@ const task_delete_operation = ( task_id ) => {
   let task_to_delete = retrieve_task(task_id)[1];
   TASK_STORAGE = delete_task_item(TASK_STORAGE, task_to_delete, "tasks");
   update_task_dom(TASK_STORAGE);
+
+  // add updating handler
+  set_task_update_event();
+
+  // add deleting handler
+  set_task_delete_event();
 }
 
 // ***** pwo_handler
