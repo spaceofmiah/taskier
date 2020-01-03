@@ -804,6 +804,7 @@ let close_task_modal = get("#close-task-modal");
 
 task_add_btn.addEventListener('click', (e) => {
   e.preventDefault();
+  reset_form("id-task-creation-form");
   toggle_modal_visibility(`#${task_add_btn.dataset['target']}`);
   get("#add_to_list_btn").value = "Add to list";
 });
