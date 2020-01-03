@@ -199,10 +199,8 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
     let result = response[1];
     result.unshift(data);
     app_storage = [...result];
-    console.log("app-storage\n", app_storage)
   } else {
     app_storage.unshift(data);
-    console.log("app-storage\n", app_storage)
   }
 
   // remove all existing data ( old data ) from database
@@ -280,12 +278,13 @@ const get = element_identifier => {
  */
 const remove_all_child_element = ( element_key ) => {
   let parent_list = get(element_key);
-
-  parent_list.forEach(parent => {
-    if(parent.childElementCount){
-      for(let i=0; i <= parent.childElementCount; i++){
-        parent.removeChild(parent.children[i]);
-      }
+  let parent = parent_list[0];
+  
+  parent.childNodes.forEach((ele, i) => {
+    parent.removeChild(ele)
+    console.log(parent.children[i])
+    if(parent.children[i]){
+        parent.removeChild(parent.children[i])
     }
   });
 }
@@ -301,9 +300,11 @@ const update_task_dom = ( storage ) =>
 {
   let parent = document.querySelector('.task-container');
   let task_obj;
-  
+
   remove_all_child_element('.task-container');
-  storage.forEach(task => {
+  
+
+  storage.forEach((task) => {
     let date = new Date(task.targetDate).toDateString();
     let tag_txt = "";
 
@@ -317,7 +318,7 @@ const update_task_dom = ( storage ) =>
       });
     }
 
-    task_obj = `<div class="task-card bg-${task.priority}">
+    task_obj += `<div class="task-card bg-${task.priority}">
      <div class="card-content">
        <h3 class="card-title">${task.title}</h3>
        <p class="card-time">
@@ -350,9 +351,9 @@ const update_task_dom = ( storage ) =>
    </div>
   `;
 
-  });
-  
-  parent.innerHTML += task_obj;
+});
+
+parent.innerHTML += task_obj;
 }
 
 
@@ -552,6 +553,7 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
 
 
 let TASK_STORAGE = [];
+// let COMPLETED_TASK_STORAGE = [];
 
  /***
  * This section contains code to automatically populate 
@@ -562,9 +564,9 @@ let TASK_STORAGE = [];
   if (data){
     TASK_STORAGE = [...data];
     if (data){
-      data.map(task => {
-        update_task_dom(TASK_STORAGE);
-      });
+      // data.map(() => {
+        update_task_dom(data);
+      // });
     }
   }
 }
@@ -1040,7 +1042,6 @@ let createTaskBtn = get('#add_to_list_btn');
 createTaskBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let task = process_task_form();
-  let TASK_STORAGE;
   
   if (task){
     // close task creation modal
@@ -1048,6 +1049,7 @@ createTaskBtn.addEventListener('click', (e) => {
 
     TASK_STORAGE = persist_data(TASK_STORAGE, task,  "tasks");
   }
+
 
 
   // adding task to DOM
