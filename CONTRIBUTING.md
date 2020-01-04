@@ -30,6 +30,8 @@ A good branch name would be (where issue #45 is the ticket you're working on):
 git checkout -b 45-add-drag-n-drop-features
 ```
 
+work on your changes on the branch you've created, in this scenario it is `45-add-drag-n-drop-features`
+
 ## Test update
 
 To test update, you'll have to build your code base using the below command
@@ -38,7 +40,7 @@ To test update, you'll have to build your code base using the below command
 npm run build
 ```
 
-You could also allow webpack to watch changes and automatically build your chagnges using this command
+You could also allow webpack to watch changes and automatically build your changes using this command
 
 ```
 npm run watch
