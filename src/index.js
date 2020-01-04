@@ -232,7 +232,7 @@ const persist_data = ( app_storage, data,  db_name="tasks") => {
 
    if (response[0] === true){
      app_storage = response[1];
-     clear_storage("tasks");
+     clear_storage(db_name);
      set_storage(app_storage, db_name);
    }
 
@@ -531,12 +531,14 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
  *  -- hide message board implement                      hide_board
  *  -- retrieving task from app storage                task_retrieval
  *  -- modal visibility toggler                        modal_visibilty
+ *  -- complete operation triggered from PWO      task_complete_operation
  *  -- delete operation triggered from PWO          task_delete_operation
  *  -- Proceed With Operation (PWO) handler              pwo_handler
  *  -- Proceed With Operation (PWO) event            pwo_event_listeners
  *     listener   
  *  -- handler to edit existing task                listener_4_task_edit
- *  -- handler to delete existing task             listener_4_task_delete
+ *  -- handler to delete existing task              task_event_operation_
+ *  -- All task operation event listener setter    all_in_one_task_OP_event
  *  -- cancel and create/update task form         task_form_button_listener
  *     button event handler
  *  -- reset task form fields                         task_form_reset
@@ -552,7 +554,7 @@ const dom_classlist_toggler = (element_id, rm_val, add_val) => {
 
 
 let TASK_STORAGE = [];
-// let COMPLETED_TASK_STORAGE = [];
+let COMPLETED_TASK_STORAGE = [];
 
  /***
  * This section contains code to automatically populate 
@@ -695,6 +697,34 @@ const toggle_modal_visibility = ( element='#new-task-modal') => {
 }
 
 
+// ***** task_complete_operation
+/**
+ * Completes a task by updating it's is_completed property and setting it to true.
+ * 
+ * Three operations are performed here ::::
+ * --> Task that was just completed is removed from database/table holding pending
+ *     or uncompleted task
+ * --> Task that was just completed is moved to database/table holding completed /
+ *     finished task
+ * --> The DOM holding unfinished task is populated with the updated application
+ *     storage ( which will no longer have the just completed task).
+ * @param {String} task_id
+ */
+const task_complete_operation = (task_id) => {
+  let task_to_update = retrieve_task(task_id)[1];
+  task_to_update.is_completed = true;
+
+  // delete the task from unfinished / uncompleted task storage
+  TASK_STORAGE = delete_task_item(
+    TASK_STORAGE, task_to_update, "tasks");
+
+  // add the task to finished / completed task storage
+  COMPLETED_TASK_STORAGE = persist_data(
+    COMPLETED_TASK_STORAGE, task_to_update, "completed_tasks");
+
+  // update the dom to display uncompleted / unfinished task storage
+  update_task_dom(TASK_STORAGE);
+}
 
 // ***** task_delete_operation
 /**
@@ -707,11 +737,7 @@ const task_delete_operation = ( task_id ) => {
   TASK_STORAGE = delete_task_item(TASK_STORAGE, task_to_delete, "tasks");
   update_task_dom(TASK_STORAGE);
 
-  // add updating handler
-  set_task_update_event();
-
-  // add deleting handler
-  set_task_delete_event();
+  all_task_OP_event();
 }
 
 // ***** pwo_handler
@@ -733,6 +759,11 @@ const yes_proceed_handler_processer = ( ) => {
 
   if(operation_type === "delete-task"){
     task_delete_operation(task_id);
+    toggle_modal_visibility("#proceed-with-operation");
+  }
+  else if (operation_type === "complete-task"){
+    // console.log("Completing task");
+    task_complete_operation(task_id);
     toggle_modal_visibility("#proceed-with-operation");
   }
 }
@@ -776,27 +807,65 @@ const set_task_update_event = ( ) => {
 }
 
 
-// ***** listener_4_task_delete
+// ***** task_event_operation_
 
 /***
- * sets delete listener on all available task delete button on the DOM,
- * open up P.W.O modal and set values ( operation-type and task_id ) to
- * proceed with operation yes button
+ * This listens to an event having a specified operation type and then
+ * fires up PWO (Proceed With Operation) modal.
+ * 
+ * sets event listener on all available button on the DOM having the 
+ * passed button_identifier, opens up P.W.O modal and set values 
+ * ( operation-type and task_id ) on PWO yes button.
+ * 
+ *  EVENT TYPES               CALLED HANDLER
+ *  
+ *  -- delete-task            task_delete_operation
+ *  -- complete-task
+ * 
+ * @param {String} button_identifier a unique identifier for
+ *      the groups/single button for which an event operation
+ *      is to be applied on
+ * 
+ * @param {String} operation should be one of the above listed 
+ *      operation type.
  */
-const set_task_delete_event = () => {
-  let task_delete_btn = get(".card-btn__delete");
-  task_delete_btn.forEach((delete_btn) => {
-    delete_btn.addEventListener('click', (e) => {
+const set_task_event_operation = (button_identifier, operation) => {
+  let buttons = get(button_identifier);
+  buttons.forEach((button) => {
+    button.addEventListener('click', (e) => {
       e.preventDefault();
 
       toggle_modal_visibility('#proceed-with-operation');
       let pwo_yes_btn = get("#pwo-yes_btn");
 
-      pwo_yes_btn.dataset.task_id = delete_btn.dataset.task;
-      pwo_yes_btn.dataset.operation_type = "delete-task";
+      pwo_yes_btn.dataset.task_id = button.dataset.task;
+      pwo_yes_btn.dataset.operation_type = operation;
     })
   })
 }
+
+
+// ***** all_in_one_task_OP_event
+/**
+ * automatically set all task Operation Event Listener on 
+ * respective DOM elements. Some of the events are
+ * 
+ * --> Task Editing     / UPDATE
+ * --> Task Deleting    / DELETE
+ * --> Task Completing  / COMPLETE
+ */
+const all_task_OP_event = ( ) => {
+  // add updating handler
+  set_task_update_event();
+
+  // add deleting handler
+  set_task_event_operation(".card-btn__delete", "delete-task");
+  set_task_event_operation(".card-btn__complete", "complete-task");
+}
+
+
+
+
 
 // ***** task_form_button_listener
 
@@ -1057,11 +1126,7 @@ createTaskBtn.addEventListener('click', (e) => {
   update_task_dom(TASK_STORAGE);
 
 
-  // add updating handler
-  set_task_update_event();
-
-  // add deleting handler
-  set_task_delete_event();
+  all_task_OP_event();
 });
 
 
@@ -1069,8 +1134,7 @@ createTaskBtn.addEventListener('click', (e) => {
 
 
 // one time call
-set_task_update_event();
-set_task_delete_event();
+all_task_OP_event();
 
 
 
