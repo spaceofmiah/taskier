@@ -76,22 +76,9 @@
         <a href="#" class="my-btn" id="task-add-btn" data-target='new-task-modal'>
           <i class="fas fa-plus"></i>
         </a>
-        <a href="#" class="nav-btn__lg" id="calendar-btn">
-          <i class="fas fa-calendar"></i>
-        </a>
-        <a href="#" class="nav-btn__lg" id="tip-btn">
-          <i class="fas fa-lightbulb"></i>
-        </a>
         <a href="#" class="nav-btn__lg" id="theme-btn">
           <i class="fas fa-sun" id="theme-icon"></i>
         </a>
-
-        <a href="#" class="my-btn nav-toggler" style="font-size: 24px;">
-          <i class="fas fa-bars"></i>
-        </a >
-
-        <div id="navbar-sidebar__js-close">
-        </div>
       </div>
     </section>
   </nav>
@@ -109,38 +96,6 @@
       <div class="content-area">
         <!-- Displaying tasks -->
         <section class="task-container">
-
-          <div class="task-card bg-purple">
-            <div class="card-content">
-              <h3 class="card-title">Study python</h3>
-              <p class="card-time">
-                <i class="fas fa-clock"></i> 
-                <span class="card-time__value">Mon Dec 30 2019 &nbsp; by &nbsp; 12:23pm</span>
-              </p>
-              <p class="card-time">
-                <i class="fas fa-bell"></i> 
-                <span class="card-time__value">yes</span>
-              </p>
-              <p class="card-tags">
-                <a href="#" class="card-tag">#python</a>
-                <a href="#" class="card-tag">#improve</a>
-                <a href="#" class="card-tag">#cli</a>
-              </p>
-            </div>
-
-            <span class="card-btns">
-              <button class="card-btn__edit">
-                <i class="fas fa-pen"></i>
-              </button>
-              <button class="card-btn__complete">
-                <i class="fas fa-check"></i>
-              </button>
-              <button class="card-btn__delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </span>
-          </div>
-
         </section>
       </div>
 
@@ -183,21 +138,21 @@
 
             <div class="my-form-group">
               <span>
-                <label>Due date</label>
+                <label for="id_task_date">Due date</label>
                 <input class="my-input" type="date" name="task_date" id="id_task_date">
               </span>
             </div>
 
             <div class="my-form-group">
               <span>
-                <label>Finishing time</label>
+                <label for="id_task_time">Finishing time</label>
                 <input class="my-input" type="time" name="task_time" id="id_task_time">
               </span>
             </div>
 
             <div class="my-form-group">
               <span>
-                <label>
+                <label for="id_task_tags">
                   Tags
                   <small>(separate tags using comma)</small>
                 </label>
@@ -207,11 +162,11 @@
 
             <div class="my-form-group">
               <label>
-                Use color to prioritize task where 
-                <a class="learnMore" href="">
+                Use color to prioritize task 
+                <!-- <a class="learnMore" href="">
                   Learn More 
                   <i class="fas fa-info-circle" style="font-size: 14px;"></i>
-                </a>
+                </a> -->
               </label>
               
               <div>

@@ -85,12 +85,13 @@ body {
 }
 
 .my-input {
-  width: 25%;
-  padding: 8px;
+  width: 38%;
+  padding: 12px;
   outline: none;
-  font-size: 16px;
+  font-size: 14px;
   min-width: 180px;
   border-radius: 4px;
+  background: transparent;
   border: 0.6px solid rgba(40, 40, 40, 0.3);
 }
 
@@ -178,7 +179,11 @@ nav section #title {
   flex: .28;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+}
+
+.navbar-sec a {
+  margin-right: 8px;
 }
 
 .nav-btn__lg {
@@ -397,9 +402,9 @@ a.card-tag {
 }
 
 @media screen and (max-width: 820px){
-  .nav-btn__lg {
+  /* .nav-btn__lg {
     display: none;
-  }
+  } */
 
   .nav-toggler {
     display: block;
@@ -417,6 +422,10 @@ a.card-tag {
 }
 
 @media screen and (max-width: 420px){
+  .my-input {
+    width: 100%;
+  }
+
   .card-btns {
     display: flex;
     flex-direction: column;
