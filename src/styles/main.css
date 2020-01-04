@@ -388,6 +388,31 @@ a.card-tag {
 
 
 
+/* 
+  * FOOTER STYLES
+*/
+
+footer {
+  text-align: center;
+  padding: 4px;
+  background-color: #7da69f;
+  font-size: 18px;
+
+  animation-name: lighten-bg;
+  animation-duration: 7s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+
+footer p {
+  color: #010c09;
+  font-weight: 500;
+}
+
+footer a {
+  color: #5a0000;
+}
+
 
 
 /**
@@ -440,6 +465,7 @@ a.card-tag {
   .modal {
     padding: 0;
     display: block;
+    z-index: 8;
   }
 
   .modal-content-wrap {
