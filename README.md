@@ -1,7 +1,7 @@
 # Taskier
 
 Taskier is a task management application that helps to keeps track of tasks and activities, making them
-more organized, accessible and customized to your own taste.
+more organized, accessible and achieveable.
 
 ## Technologies
 
