@@ -1,19 +1,6 @@
 # CONTRIBUTING GUIDE
 
-Thank you for considering contributing to Taskier. Below is a detailed guide to help you get started
-
-## Project files
-
-This project currently have a simple and easy to follow structure. The core files and folders that make up the project code base are: 
-
-**Core Application Files**
-
-- [HTML index file](./index.html) : This is the `index.html` file and it houses the HTML markup that makes up the whole of the application structure
-
-- [Application controller file](./src/index.js) : This is the `./src/index.js` file and it houses the logic for application interaction (event listeners and handlers)
-
-- [Task Component](./src/Task.js): This is the `./src/Task.js` file and it's solely used to model a Task object.
-
+Thank you for considering contributing to Taskier. Below is a guide to help you get started.
 
 
 ## Where do i go from here?
